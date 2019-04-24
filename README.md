@@ -107,20 +107,23 @@
     Path       路径
     State      状态
     Created    创建时间
+    Accessed   访问时间
+    AccessCount访问次数
     
     Pid        任务ID
     PidMode    任务模式
-    StartedAt  开始时间
-    EndedAt    结束时间
-    FinishedAt 完成时间
-    Status     状态信息
-    Running    正在运行?
-    Paused     暂停状态?
-    Restarting 重新运行?
-    Killed     被杀掉了?
-    Dead       已死掉了?
+    StartedAt  开始时间    AboutToStart   关于开始时的动作
+    ExpireAt   过期时间    AboutToExpire  关于过期时的动作
+    EndedAt    结束时间    AboutToEnd     关于结束时的动作
+    FinishedAt 完成时间    AboutToFinish  关于完成时的动作
+    Status     状态信息    AboutToChange  关于状态变化时的动作
+    Running    正在运行?           bool
+    Paused     暂停状态?           bool
+    Restarting 重新运行?           bool
+    Killed     被杀掉了?           bool
+    Dead       已死掉了?           bool
+    Error      异常                string
     ExitCode   退出码               int
-    Error      异常                 varchar
     RestartCount 重新开始次数        int
     SecurityOpt  安全属性
     Ulimits      用户限制
@@ -129,11 +132,16 @@
     PublicPaths  公开路径
     
     User       用户
+    Aliases    别名
     Source     来源
     Destination目标
     Mode       模式
     Propagation传播
     Labels     标签
+    Settings   设置
+    Gateway    网关
+    IPAddress  IP地址
+    MacAddress Mac地址
     
     
     
