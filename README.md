@@ -108,6 +108,8 @@
     State      状态
     Created    创建时间
     
+    Pid        任务ID
+    PidMode    任务模式
     StartedAt  开始时间
     EndedAt    结束时间
     FinishedAt 完成时间
@@ -117,7 +119,24 @@
     Restarting 重新运行?
     Killed     被杀掉了?
     Dead       已死掉了?
-    ExitCode   退出码    int
-    Error      异常      varchar
+    ExitCode   退出码               int
+    Error      异常                 varchar
+    RestartCount 重新开始次数        int
+    SecurityOpt  安全属性
+    Ulimits      用户限制
+    MaskedPaths  遮罩路径/私密访问
+    ReadonlyPaths只读路径
+    PublicPaths  公开路径
     
-
+    User       用户
+    Source     来源
+    Destination目标
+    Mode       模式
+    Propagation传播
+    Labels     标签
+    
+    
+    
+    
+    
+    
