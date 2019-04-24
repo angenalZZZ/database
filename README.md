@@ -102,29 +102,34 @@
 
 #### 字段名
 
-    Id         主键/标识
-    Name       名称
-    Path       路径
-    State      状态
-    Created    创建时间
-    Accessed   访问时间
-    AccessCount访问次数
+    Id                主键/标识
+    Name              名称
+    Path              路径
+    State             状态
+    Created           创建时间
+    AccessCount       访问次数(累加)       int
+    Accessed          访问时间(最近)       time.Time
+    LifeSpan          活动寿命(时长)       time.Duration
+    KeepAlive         保持活动动作 & Accessed & AccessCount
+    KeepAliveTime     保持活动时长
+    KeepAliveInterval 保持活动心跳
+    MaxDataRetries    最大重试次数
     
     Pid        任务ID
     PidMode    任务模式
-    StartedAt  开始时间    AboutToStart   关于开始时的动作
-    ExpireAt   过期时间    AboutToExpire  关于过期时的动作
-    EndedAt    结束时间    AboutToEnd     关于结束时的动作
-    FinishedAt 完成时间    AboutToFinish  关于完成时的动作
-    Status     状态信息    AboutToChange  关于状态变化时的动作
+    StartedAt  开始时间    AboutToStart   关于开始时的动作 triggered Callback
+    ExpireAt   过期时间    AboutToExpire  关于过期时的动作 triggered Callback
+    EndedAt    结束时间    AboutToEnd     关于结束时的动作 triggered Callback
+    FinishedAt 完成时间    AboutToFinish  关于完成时的动作 triggered Callback
+    Status     状态信息    AboutToChange  关于变化时的动作 triggered Callback
     Running    正在运行?           bool
     Paused     暂停状态?           bool
     Restarting 重新运行?           bool
     Killed     被杀掉了?           bool
     Dead       已死掉了?           bool
-    Error      异常                string
-    ExitCode   退出码               int
-    RestartCount 重新开始次数        int
+    Error      异常               string
+    ExitCode   退出码              int
+    RestartCount 重新开始次数       int
     SecurityOpt  安全属性
     Ulimits      用户限制
     MaskedPaths  遮罩路径
