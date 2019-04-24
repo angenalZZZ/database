@@ -127,7 +127,8 @@
     RestartCount 重新开始次数        int
     SecurityOpt  安全属性
     Ulimits      用户限制
-    MaskedPaths  遮罩路径/私密访问
+    MaskedPaths  遮罩路径
+    PrivatePaths 私密路径
     ReadonlyPaths只读路径
     PublicPaths  公开路径
     
