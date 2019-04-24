@@ -137,18 +137,18 @@
     ReadonlyPaths只读路径
     PublicPaths  公开路径
     
-    User       用户
-    Aliases    别名
-    Source     来源
-    Destination目标
-    Mode       模式
-    Propagation传播
-    Labels     标签
-    Settings   设置
-    Gateway    网关
-    IPAddress  IP地址
-    MacAddress Mac地址
-    
+    User         用户
+    Aliases      别名
+    Source       来源
+    Destination  目标
+    Mode         模式
+    Propagation  传播
+    Labels       标签
+    Settings     设置
+    Gateway      网关
+    IPAddress    IP地址
+    MacAddress   Mac地址
+    EmailAddress 邮箱地址
     
     
     
