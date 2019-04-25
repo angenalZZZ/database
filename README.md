@@ -129,7 +129,8 @@
     Dead       已死掉了?           bool
     Error      异常               string
     ExitCode   退出码              int
-    RestartCount 重新开始次数       int
+    RestartCount 重试次数          int
+    Priority     优先级            int    `正常` 0 for normal , `紧急` 1 for emergency
     SecurityOpt  安全属性
     Ulimits      用户限制
     MaskedPaths  遮罩路径
