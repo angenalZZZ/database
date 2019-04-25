@@ -117,7 +117,7 @@
     KeepAliveInterval 保持活动心跳
     MaxDataRetries    最大重试次数
     
-    Pid          任务ID
+    Pid          任务ID; TaskId 多个任务ID用半角逗号分隔11,12; RequestId 请求GUID;
     PidMode      任务模式
     Events       事件列表
     Actions      动作列表
@@ -160,7 +160,24 @@
     MacAddress   Mac地址
     EmailAddress 邮箱地址
     
+    Throttling   请求被流量控制限制
+    IllegalOperation 非法域名，无法操作
+    OperationDenied  账号未开通***服务
+    OperationDeniedSuspended 账号已欠费，请充值
+    InvalidDomainConfigure域名配置失败
+    InvalidDomainNotFound 域名不存在或不属于当前用户
+    InvalidDomainOffline  域名已下线
+    QuotaExceededRefresh  超出当日刷新限制
+    ServiceBusy 正在配置中, 请稍后再试
+    MissingParameter 缺少***参数
+    QuotaPerMinuteExceededRefresh 超出每分钟刷新限制
+    InvalidObjectTypeValueNotSupported 不支持指定的值
+    InvalidExtensiveDomainValueNotSupported 不支持泛域名
+    InvalidObjectPathMalformed ***值格式错误
     
-    
-    
+    StartTime    开始时间
+    EndTime      结束时间
+    PageNumber   返回数据的页码
+    PageSize     整页大小
+    Total        总条数
     
