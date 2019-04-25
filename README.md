@@ -117,22 +117,22 @@
     KeepAliveInterval 保持活动心跳
     MaxDataRetries    最大重试次数
     
-    Pid        任务ID
-    PidMode    任务模式
-    StartedAt  开始时间    AboutToStart   关于开始时的动作 triggered Callback
-    ExpireAt   过期时间    AboutToExpire  关于过期时的动作 triggered Callback
-    EndedAt    结束时间    AboutToEnd     关于结束时的动作 triggered Callback
-    FinishedAt 完成时间    AboutToFinish  关于完成时的动作 triggered Callback
-    Status     状态信息    AboutToChange  关于变化时的动作 triggered Callback
-    Running    正在运行?           bool
-    Paused     暂停状态?           bool
-    Restarting 重新运行?           bool
-    Killed     被杀掉了?           bool
-    Dead       已死掉了?           bool
-    Error      异常               string
-    ExitCode   退出码              int
-    RestartCount 重试次数          int
-    Priority     优先级            int    `正常` 0 for normal , `紧急` 1 for emergency
+    Pid          任务ID
+    PidMode      任务模式
+    StartedAt    开始时间    AboutToStart   关于开始时的动作 triggered Callback
+    ExpireAt     过期时间    AboutToExpire  关于过期时的动作 triggered Callback
+    EndedAt      结束时间    AboutToEnd     关于结束时的动作 triggered Callback
+    FinishedAt   完成时间    AboutToFinish  关于完成时的动作 triggered Callback
+    Status       状态信息    AboutToChange  关于变化时的动作 triggered Callback
+    Running      正在运行?           bool
+    Paused       暂停状态?           bool
+    Restarting   重新运行?           bool
+    Killed       被杀掉了?           bool
+    Dead         已死掉了?           bool
+    Error        异常               string
+    ExitCode     退出码#             int
+    RestartCount 重试次数            int
+    Priority     优先级              int    `正常` 0 for normal , `紧急` 1 for emergency
     SecurityOpt  安全属性
     Ulimits      用户限制
     MaskedPaths  遮罩路径
