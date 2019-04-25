@@ -119,6 +119,12 @@
     
     Pid          任务ID
     PidMode      任务模式
+    Events       事件列表
+    Actions      动作列表
+    Filters      过滤列表
+    Chains       链子列表
+    Elements     元素列表
+    Options      选项列表
     StartedAt    开始时间    AboutToStart   关于开始时的动作 triggered Callback
     ExpireAt     过期时间    AboutToExpire  关于过期时的动作 triggered Callback
     EndedAt      结束时间    AboutToEnd     关于结束时的动作 triggered Callback
@@ -144,6 +150,7 @@
     Aliases      别名
     Source       来源
     Destination  目标
+    Description  描述
     Mode         模式
     Propagation  传播
     Labels       标签
