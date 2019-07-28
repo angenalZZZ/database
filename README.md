@@ -104,25 +104,25 @@
 /* 过滤数据 Filtering Data */
 SELECT name FROM users WHERE gender = 1 AND (age BETWEEN 20 AND 30) AND country IN ('CHINA','USA')
 /* 日期时间 Date and Time */
- // MySQL
+ -- MySQL
 SELECT name,DATE_FORMAT(birthday,'%Y-%m-%d') FROM users WHERE YEAR(birthday)=YEAR(now())
- // Oracle
+ -- Oracle
 SELECT name,to_char(birthday,'YYYY-MM-DD') FROM users WHERE age = 20
 
 /* 分页数据 Limiting Results */
- // MySQL,PostgreSQL,SQLite
-SELECT name FROM users LIMIT 5           // 只取前5条
-SELECT name FROM users LIMIT 5, 5        // 从第6条取到第10条
- // MsSQL, Access
-SELECT TOP 5 name FROM users             // 只取前5条
-SELECT name FROM users ORDER BY id OFFSET 5 ROWS FETCH NEXT 5 ROWS ONLY // 从第6条取到第10条 MsSQL^2012
- // DB2
-SELECT name FROM users FETCH FIRST 5 ROWS ONLY // 只取前5条
- // Oracle
-SELECT name FROM users WHERE ROWNUM <= 5 // 只取前5条
- // Firebird,Interbase
-SELECT name FROM users ROWS 5            // 只取前5条
-SELECT name FROM users ROWS 6 TO 10      // 从第6条取到第10条
+ -- MySQL,PostgreSQL,SQLite
+SELECT name FROM users LIMIT 5           -- 只取前5条
+SELECT name FROM users LIMIT 5, 5        -- 从第6条取到第10条
+ -- MsSQL, Access
+SELECT TOP 5 name FROM users             -- 只取前5条
+SELECT name FROM users ORDER BY id OFFSET 5 ROWS FETCH NEXT 5 ROWS ONLY -- 从第6条取到第10条 MsSQL^2012
+ -- DB2
+SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
+ -- Oracle
+SELECT name FROM users WHERE ROWNUM <= 5 -- 只取前5条
+ -- Firebird,Interbase
+SELECT name FROM users ROWS 5            -- 只取前5条
+SELECT name FROM users ROWS 6 TO 10      -- 从第6条取到第10条
 
 ~~~
 
