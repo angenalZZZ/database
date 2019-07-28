@@ -7,11 +7,11 @@
   [`数据库设计`](#数据库设计)
 
 ## 数据库管理系统
-    Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
-    一般具有存储、截取、安全保障、备份等基础功能。  数据库管理系统可以依据它所支持的数据库模型来作分类，例如`关系式`、`XML`；
-    或依据所支持的计算机类型来作分类，例如服务器群集、移动电话； 或依据所用查询语言来作分类，例如`SQL`、`XQuery`；
-    或依据性能冲量重点来作分类，例如最大规模、最高运行速度；亦或其他的分类方式。
-    不论使用哪种分类方式，一些`DBMS`能够跨类别，例如，同时支持多种查询语言。
+  Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
+  一般具有存储、截取、安全保障、备份等基础功能。  数据库管理系统可以依据它所支持的数据库模型来作分类，例如`关系式`、`XML`；
+  或依据所支持的计算机类型来作分类，例如服务器群集、移动电话； 或依据所用查询语言来作分类，例如`SQL`、`XQuery`；
+  或依据性能冲量重点来作分类，例如最大规模、最高运行速度；亦或其他的分类方式。
+  不论使用哪种分类方式，一些`DBMS`能够跨类别，例如，同时支持多种查询语言。
 
 ## 数据库类型
 
@@ -19,7 +19,7 @@
 
 - MySQL https://www.mysql.com
 
-- - MySQL Enterprise Edition 提供了可扩展性、安全性、可靠性；降低了开发、部署和管理业务应用的风险、成本和复杂性。
+  - MySQL Enterprise Edition 提供了可扩展性、安全性、可靠性；降低了开发部署和管理的风险、成本和复杂性。
   - MariaDB（MySQL的代替品）https://github.com/MariaDB/server
   - Percona Server（MySQL的代替品）https://github.com/percona/percona-server
 
@@ -81,7 +81,7 @@
 
 网状数据模型的数据结构 网状模型 满足下面两个条件的基本层次联系的集合为网状模型。 
 
-1. 允许一个以上的结点无双亲； 2. 一个结点可以有多于一个的双亲。
+ 1. 允许一个以上的结点无双亲； 2. 一个结点可以有多于一个的双亲。
 
 ----
 
@@ -89,13 +89,13 @@
 ### SQL查询语句
 
  * DML（data manipulation language）数据操纵语言
-    对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
+  - 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
  * DDL（data definition language）数据库定义语言
-    定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
+  - 定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
  * DCL（Data Control Language）数据库控制语言
-    设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
+  - 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
 
-#### 获取数据 DML SELECT
+#### 获取数据 DML-SELECT
 ~~~
 ## Limiting Results
  #@ MySQL,PostgreSQL,SQLite
