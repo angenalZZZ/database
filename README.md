@@ -125,6 +125,112 @@ SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
 ~~~
  * DDL（data definition language）数据库定义语言
     * 定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
+    * CREATE ~积分~
+~~~sql
+CREATE TABLE `common_credit_log` (
+  `logid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '积分记录id',
+  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '用户id', -- 关联`common_member`.`uid`
+  `operation` char(3) NOT NULL DEFAULT '' COMMENT '积分变更-项目类型', -- 项目'TRC' => '任务奖励积分'
+  `relatedid` int(10) unsigned NOT NULL COMMENT '积分变更-关联内容id',
+  `dateline` int(10) unsigned NOT NULL COMMENT '积分变更-时间',
+  `extcredits1` int(10) NOT NULL COMMENT '', -- 积分变更-数额s1
+  `extcredits2` int(10) NOT NULL COMMENT '',
+  `extcredits3` int(10) NOT NULL COMMENT '',
+  `extcredits4` int(10) NOT NULL COMMENT '',
+  `extcredits5` int(10) NOT NULL COMMENT '',
+  `extcredits6` int(10) NOT NULL COMMENT '',
+  `extcredits7` int(10) NOT NULL COMMENT '',
+  `extcredits8` int(10) NOT NULL COMMENT '',
+  PRIMARY KEY (`logid`),
+  KEY `uid` (`uid`),
+  KEY `operation` (`operation`),
+  KEY `relatedid` (`relatedid`),
+  KEY `dateline` (`dateline`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='积分记录表';
+
+CREATE TABLE `pre_common_credit_log_field` (
+  `logid` mediumint(8) unsigned NOT NULL COMMENT '积分记录id',
+  `title` varchar(100) NOT NULL COMMENT '标题',
+  `text` text NOT NULL COMMENT '内容',
+  KEY `logid` (`logid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='积分记录详情表';
+
+CREATE TABLE `pre_common_credit_rule` (
+  `rid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT='积分策略id',
+  `rulename` varchar(20) NOT NULL DEFAULT '' COMMENT='策略',
+  `action` varchar(20) NOT NULL DEFAULT '' COMMENT='操作',
+  `cycletype` tinyint(1) NOT NULL DEFAULT '0',
+  `cycletime` int(10) NOT NULL DEFAULT '0',
+  `rewardnum` tinyint(2) NOT NULL DEFAULT '1',
+  `norepeat` tinyint(1) NOT NULL DEFAULT '0',
+  `extcredits1` int(10) NOT NULL DEFAULT '0',
+  `extcredits2` int(10) NOT NULL DEFAULT '0',
+  `extcredits3` int(10) NOT NULL DEFAULT '0',
+  `extcredits4` int(10) NOT NULL DEFAULT '0',
+  `extcredits5` int(10) NOT NULL DEFAULT '0',
+  `extcredits6` int(10) NOT NULL DEFAULT '0',
+  `extcredits7` int(10) NOT NULL DEFAULT '0',
+  `extcredits8` int(10) NOT NULL DEFAULT '0',
+  `fids` text NOT NULL,
+  PRIMARY KEY (`rid`),
+  UNIQUE KEY `action` (`action`)
+) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='积分策略表';
+
+CREATE TABLE `pre_common_credit_rule_log` (
+  `clid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '用户id', -- 关联`common_member`.`uid`
+  `rid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT='积分策略id',
+  `fid` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `total` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `cyclenum` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `extcredits1` int(10) NOT NULL DEFAULT '0',
+  `extcredits2` int(10) NOT NULL DEFAULT '0',
+  `extcredits3` int(10) NOT NULL DEFAULT '0',
+  `extcredits4` int(10) NOT NULL DEFAULT '0',
+  `extcredits5` int(10) NOT NULL DEFAULT '0',
+  `extcredits6` int(10) NOT NULL DEFAULT '0',
+  `extcredits7` int(10) NOT NULL DEFAULT '0',
+  `extcredits8` int(10) NOT NULL DEFAULT '0',
+  `starttime` int(10) unsigned NOT NULL DEFAULT '0',
+  `dateline` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`clid`),
+  KEY `uid` (`uid`,`rid`,`fid`),
+  KEY `dateline` (`dateline`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='积分策略生效记录表';
+
+CREATE TABLE `common_member_count` (
+  `uid` mediumint(8) unsigned NOT NULL COMMENT '用户id', -- 关联`common_member`.`uid`
+  `extcredits1` int(10) NOT NULL DEFAULT '0', -- 统计-数额s1
+  `extcredits2` int(10) NOT NULL DEFAULT '0',
+  `extcredits3` int(10) NOT NULL DEFAULT '0',
+  `extcredits4` int(10) NOT NULL DEFAULT '0',
+  `extcredits5` int(10) NOT NULL DEFAULT '0',
+  `extcredits6` int(10) NOT NULL DEFAULT '0',
+  `extcredits7` int(10) NOT NULL DEFAULT '0',
+  `extcredits8` int(10) NOT NULL DEFAULT '0',
+  `friends` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `posts` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `threads` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `digestposts` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `doings` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `blogs` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `albums` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `sharings` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `attachsize` int(10) unsigned NOT NULL DEFAULT '0',
+  `views` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `oltime` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `todayattachs` smallint(6) unsigned NOT NULL DEFAULT '0',
+  `todayattachsize` int(10) unsigned NOT NULL DEFAULT '0',
+  `feeds` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `follower` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `following` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `newfollower` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `blacklist` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`),
+  KEY `posts` (`posts`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户数据统计表';
+
+~~~
  * DCL（Data Control Language）数据库控制语言
     * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
 
