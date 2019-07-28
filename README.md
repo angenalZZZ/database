@@ -116,14 +116,17 @@ SELECT name FROM users LIMIT 5, 5        -- 从第6条取到第10条
  -- MsSQL, Access
 SELECT TOP 5 name FROM users             -- 只取前5条
 SELECT name FROM users ORDER BY id OFFSET 5 ROWS FETCH NEXT 5 ROWS ONLY -- 从第6条取到第10条 MsSQL^2012
- -- DB2
-SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
  -- Oracle
 SELECT name FROM users WHERE ROWNUM <= 5 -- 只取前5条
+SELECT * FROM (SELECT ROWNUM AS rn, * FROM users 
+    WHERE hire_date BETWEEN TO_DATE('20060701','yyyymmdd') AND TO_DATE('20060731', 'yyyymmdd')
+    AND ROWNUM <= 20) AS t
+    WHERE t.rn >= 10;
  -- Firebird,Interbase
 SELECT name FROM users ROWS 5            -- 只取前5条
 SELECT name FROM users ROWS 6 TO 10      -- 从第6条取到第10条
-
+ -- DB2
+SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
 ~~~
 
 ----
