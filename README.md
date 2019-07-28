@@ -132,7 +132,7 @@ SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
 
 ### 数据库设计
 
-#### 积分~奖励
+#### ✨积分~奖励
 ~~~sql
  -- MySQL
 CREATE TABLE `common_credit_log` (
@@ -241,7 +241,7 @@ CREATE TABLE `common_member_count` (
 ~~~
 
 
-#### 其它常用字段
+#### ✨其它常用字段✨
 
     Id                主键/标识
     Name              名称
