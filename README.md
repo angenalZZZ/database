@@ -64,9 +64,9 @@
 
 #### 数据库索引
 
-数据索引的观念由来已久，像是一本书前面几页都有目录，目录也算是索引的一种，只是它的分类较广，例如车牌、身份证字号、条码等，都是一个索引的号码，当我们看到号码时，可以从号码中看出其中的端倪，若是要找的人、车或物品，也只要提供相关的号码，即可迅速查到正确的人事物。
+    数据索引的观念由来已久，像是一本书前面几页都有目录，目录也算是索引的一种，只是它的分类较广，例如车牌、身份证字号、条码等，都是一个索引的号码，当我们看到号码时，可以从号码中看出其中的端倪，若是要找的人、车或物品，也只要提供相关的号码，即可迅速查到正确的人事物。
 
-另外，索引跟字段有着相应的关系，索引即是由字段而来，其中字段有所谓的关键字段（Key Field），该字段具有唯一性，即其值不可重复，且不可为"空值（null）"。例如：在合并数据时，索引便是扮演欲附加字段数据之指向性用途的角色。故此索引为不可重复性且不可为空。
+    另外，索引跟字段有着相应的关系，索引即是由字段而来，其中字段有所谓的关键字段（Key Field），该字段具有唯一性，即其值不可重复，且不可为`空值null`。例如：在合并数据时，索引便是扮演欲附加字段数据之指向性用途的角色。故此索引为不可重复性且不可为空。
 
 #### 数据库事务
 
@@ -81,7 +81,7 @@
 
 网状数据模型的数据结构 网状模型 满足下面两个条件的基本层次联系的集合为网状模型。 
 
- > 1. 允许一个以上的结点无双亲； 2. 一个结点可以有多于一个的双亲。
+ 1. 允许一个以上的结点无双亲； 2. 一个结点可以有多于一个的双亲。
 
 ----
 
@@ -97,7 +97,15 @@
 
 #### 获取数据 DML-SELECT
 ~~~
-## Limiting Results
+## 过滤数据 Filtering Data
+SELECT name FROM users WHERE gender = 1 AND (age BETWEEN 20 AND 30) AND country IN ('CHINA','USA')
+## 日期时间 Date and Time
+ #@ MySQL
+SELECT name,DATE_FORMAT(birthday,'%Y-%m-%d') FROM users WHERE YEAR(birthday)=YEAR(now())
+ #@ Oracle
+SELECT name,to_char(birthday,'YYYY-MM-DD') FROM users WHERE age = 20
+
+## 分页数据 Limiting Results
  #@ MySQL,PostgreSQL,SQLite
 SELECT name FROM users LIMIT 5           # 只取前5条
 SELECT name FROM users LIMIT 5, 5        # 从第6条取到第10条
@@ -112,22 +120,15 @@ SELECT name FROM users WHERE ROWNUM <= 5 # 只取前5条
 SELECT name FROM users ROWS 5            # 只取前5条
 SELECT name FROM users ROWS 6 TO 10      # 从第6条取到第10条
 
-## Filtering Data
-SELECT name FROM users WHERE gender = 1 AND (age BETWEEN 20 AND 30) AND country IN ('CHINA','USA')
-## Date and Time
- #@ MySQL
-SELECT DATE_FORMAT(birthday,'%Y-%m-%d') FROM users WHERE YEAR(birthday)=YEAR(now())
- #@ Oracle
-SELECT to_char(birthday,'YYYY-MM-DD') FROM users WHERE age = 20
-
 ~~~
 
 ----
 
+
 ### 数据库设计
 
 
-#### 常用的字段名
+#### 常用字段
 
     Id                主键/标识
     Name              名称
