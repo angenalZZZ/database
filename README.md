@@ -4,7 +4,7 @@
     简而言之可视为电子化的文件柜——存储电子文件的处所，用户可以对文件中的数据进行新增、截取、更新、删除等操作。
     所谓“数据库”是以一定方式储存在一起、能予多个用户共享、具有尽可能小的冗余度、与应用程序彼此独立的数据集合。
 
- > [sql查询语句|表结构](#sql查询语句)、[`数据库设计`](#数据库设计)
+ > [`sql查询语句`](#sql查询语句)、[`数据库设计`](#数据库设计)
 
 ## 数据库管理系统
     Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
@@ -92,9 +92,13 @@
 
 #### SQL查询语句
 
+ * DDL（data definition language）数据库定义语言
+    * 定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
+ * DCL（Data Control Language）数据库控制语言
+    * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
  * DML（data manipulation language）数据操纵语言
     * 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
-    * SELECT ~获取数据~ 
+    * ~获取数据~ 
 ~~~sql
 /* 过滤数据 Filtering Data */
 SELECT name FROM users WHERE gender = 1 AND (age BETWEEN 20 AND 30) AND country IN ('CHINA','USA')
@@ -123,10 +127,14 @@ SELECT name FROM users ROWS 6 TO 10      -- 从第6条取到第10条
  -- DB2
 SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
 ~~~
- * DDL（data definition language）数据库定义语言
-    * 定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
-    * CREATE ~积分~
+
+----
+
+### 数据库设计
+
+#### 积分~奖励
 ~~~sql
+ -- MySQL
 CREATE TABLE `common_credit_log` (
   `logid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '积分记录id',
   `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '用户id', -- 关联`common_member`.`uid`
@@ -231,15 +239,9 @@ CREATE TABLE `common_member_count` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户数据统计表';
 
 ~~~
- * DCL（Data Control Language）数据库控制语言
-    * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
-
-----
-
-### 数据库设计
 
 
-#### 常用字段
+#### 其它常用字段
 
     Id                主键/标识
     Name              名称
