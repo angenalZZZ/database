@@ -52,7 +52,7 @@
 - 关系模型
 - 面向对象模型
 - 半结构化模型
-- 平面模型（表格模型，一般在形式上是一个二维数组。如表格模型数据Excel)
+- 平面模型（表格模型，一般在形式上是一个二维数组；如表格模型数据Excel)
 
 #### 数据库架构
 
@@ -136,11 +136,11 @@ CREATE TABLE `common_credit_log` (
   `extcredits1` int(10) NOT NULL COMMENT '', -- 变更--威望 \扩展/积分设置`common_setting`.`extcredits`
   `extcredits2` int(10) NOT NULL COMMENT '',
   `extcredits3` int(10) NOT NULL COMMENT '',
-  `extcredits4` int(10) NOT NULL COMMENT '',
-  `extcredits5` int(10) NOT NULL COMMENT '',
-  `extcredits6` int(10) NOT NULL COMMENT '',
-  `extcredits7` int(10) NOT NULL COMMENT '',
-  `extcredits8` int(10) NOT NULL COMMENT '',
+  `extcredits4` int(10) NOT NULL,
+  `extcredits5` int(10) NOT NULL,
+  `extcredits6` int(10) NOT NULL,
+  `extcredits7` int(10) NOT NULL,
+  `extcredits8` int(10) NOT NULL,
   PRIMARY KEY (`logid`),
   KEY `uid` (`uid`),
   KEY `operation` (`operation`),
@@ -156,16 +156,16 @@ CREATE TABLE `pre_common_credit_log_field` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='积分记录详情表';
 
 CREATE TABLE `pre_common_credit_rule` (
-  `rid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT='积分策略id',
-  `rulename` varchar(20) NOT NULL DEFAULT '' COMMENT='策略名称',
-  `action` varchar(20) NOT NULL DEFAULT '' COMMENT='策略英文名',
-  `cycletype` tinyint(1) NOT NULL DEFAULT '0' COMMENT='周期:0.一次;1.每天;2.整点;3.间隔分钟;4.不限;5.每月;6.每季度;7每年',
-  `cycletime` int(10) NOT NULL DEFAULT '0' COMMENT='间隔时间-小时|分钟', -- 对应cycletype:2|3
-  `rewardnum` tinyint(2) NOT NULL DEFAULT '1' COMMENT='奖励次数', -- 周期内最多奖励次数:0为不限次数
-  `norepeat` tinyint(1) NOT NULL DEFAULT '0' COMMENT='不重复累加',
-  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT='', -- 设置--威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT='', -- 金钱
-  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT='', -- 贡献
+  `rid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '积分策略id',
+  `rulename` varchar(20) NOT NULL DEFAULT '' COMMENT '策略名称',
+  `action` varchar(20) NOT NULL DEFAULT '' COMMENT '策略英文名',
+  `cycletype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '周期:0.一次;1.每天;2.整点;3.间隔分钟;4.不限;5.每月;6.每季度;7每年',
+  `cycletime` int(10) NOT NULL DEFAULT '0' COMMENT '间隔时间-小时|分钟', -- 对应cycletype:2|3
+  `rewardnum` tinyint(2) NOT NULL DEFAULT '1' COMMENT '奖励次数', -- 周期内最多奖励次数:0为不限次数
+  `norepeat` tinyint(1) NOT NULL DEFAULT '0' COMMENT '不重复累加',
+  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 设置--威望 \扩展/积分设置`common_setting`.`extcredits`
+  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 金钱
+  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 贡献
   `extcredits4` int(10) NOT NULL DEFAULT '0',
   `extcredits5` int(10) NOT NULL DEFAULT '0',
   `extcredits6` int(10) NOT NULL DEFAULT '0',
@@ -179,13 +179,13 @@ CREATE TABLE `pre_common_credit_rule` (
 CREATE TABLE `pre_common_credit_rule_log` (
   `clid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '用户id', -- 关联`common_member`.`uid`
-  `rid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT='积分策略id',
-  `fid` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `total` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `cyclenum` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT='', -- 设置--威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL DEFAULT '0',
-  `extcredits3` int(10) NOT NULL DEFAULT '0',
+  `rid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '积分策略id',
+  `fid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '',
+  `total` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '',
+  `cyclenum` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '',
+  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 设置--威望 \扩展/积分设置`common_setting`.`extcredits`
+  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '',
+  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '',
   `extcredits4` int(10) NOT NULL DEFAULT '0',
   `extcredits5` int(10) NOT NULL DEFAULT '0',
   `extcredits6` int(10) NOT NULL DEFAULT '0',
@@ -201,8 +201,8 @@ CREATE TABLE `pre_common_credit_rule_log` (
 CREATE TABLE `common_member_count` (
   `uid` mediumint(8) unsigned NOT NULL COMMENT '用户id', -- 关联`common_member`.`uid`
   `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 统计--威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL DEFAULT '0',
-  `extcredits3` int(10) NOT NULL DEFAULT '0',
+  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '',
+  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '',
   `extcredits4` int(10) NOT NULL DEFAULT '0',
   `extcredits5` int(10) NOT NULL DEFAULT '0',
   `extcredits6` int(10) NOT NULL DEFAULT '0',
