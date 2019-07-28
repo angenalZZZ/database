@@ -94,12 +94,7 @@
 
  * DML（data manipulation language）数据操纵语言
     * 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
- * DDL（data definition language）数据库定义语言
-    * 定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
- * DCL（Data Control Language）数据库控制语言
-    * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
-
-#### 获取数据 DML-SELECT
+    * SELECT ~获取数据~ 
 ~~~sql
 /* 过滤数据 Filtering Data */
 SELECT name FROM users WHERE gender = 1 AND (age BETWEEN 20 AND 30) AND country IN ('CHINA','USA')
@@ -128,9 +123,12 @@ SELECT name FROM users ROWS 6 TO 10      -- 从第6条取到第10条
  -- DB2
 SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
 ~~~
+ * DDL（data definition language）数据库定义语言
+    * 定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
+ * DCL（Data Control Language）数据库控制语言
+    * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
 
 ----
-
 
 ### 数据库设计
 
