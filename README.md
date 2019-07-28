@@ -90,7 +90,7 @@
 ----
 
 
-### SQL查询语句
+#### SQL查询语句
 
  * DML（data manipulation language）数据操纵语言
     * 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
@@ -133,7 +133,7 @@ CREATE TABLE `common_credit_log` (
   `operation` char(3) NOT NULL DEFAULT '' COMMENT '积分变更-项目类型', -- 项目'TRC' => '任务奖励积分'
   `relatedid` int(10) unsigned NOT NULL COMMENT '积分变更-关联内容id',
   `dateline` int(10) unsigned NOT NULL COMMENT '积分变更-时间',
-  `extcredits1` int(10) NOT NULL COMMENT '', -- 积分变更-数额s1
+  `extcredits1` int(10) NOT NULL COMMENT '', -- 变更--威望 \扩展/积分设置`common_setting`.`extcredits`
   `extcredits2` int(10) NOT NULL COMMENT '',
   `extcredits3` int(10) NOT NULL COMMENT '',
   `extcredits4` int(10) NOT NULL COMMENT '',
@@ -157,15 +157,15 @@ CREATE TABLE `pre_common_credit_log_field` (
 
 CREATE TABLE `pre_common_credit_rule` (
   `rid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT='积分策略id',
-  `rulename` varchar(20) NOT NULL DEFAULT '' COMMENT='策略',
-  `action` varchar(20) NOT NULL DEFAULT '' COMMENT='操作',
-  `cycletype` tinyint(1) NOT NULL DEFAULT '0',
-  `cycletime` int(10) NOT NULL DEFAULT '0',
-  `rewardnum` tinyint(2) NOT NULL DEFAULT '1',
-  `norepeat` tinyint(1) NOT NULL DEFAULT '0',
-  `extcredits1` int(10) NOT NULL DEFAULT '0',
-  `extcredits2` int(10) NOT NULL DEFAULT '0',
-  `extcredits3` int(10) NOT NULL DEFAULT '0',
+  `rulename` varchar(20) NOT NULL DEFAULT '' COMMENT='策略名称',
+  `action` varchar(20) NOT NULL DEFAULT '' COMMENT='策略英文名',
+  `cycletype` tinyint(1) NOT NULL DEFAULT '0' COMMENT='周期:0.一次;1.每天;2.整点;3.间隔分钟;4.不限;5.每月;6.每季度;7每年',
+  `cycletime` int(10) NOT NULL DEFAULT '0' COMMENT='间隔时间-小时|分钟', -- 对应cycletype:2|3
+  `rewardnum` tinyint(2) NOT NULL DEFAULT '1' COMMENT='奖励次数', -- 周期内最多奖励次数:0为不限次数
+  `norepeat` tinyint(1) NOT NULL DEFAULT '0' COMMENT='不重复累加',
+  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT='', -- 设置--威望 \扩展/积分设置`common_setting`.`extcredits`
+  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT='', -- 金钱
+  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT='', -- 贡献
   `extcredits4` int(10) NOT NULL DEFAULT '0',
   `extcredits5` int(10) NOT NULL DEFAULT '0',
   `extcredits6` int(10) NOT NULL DEFAULT '0',
@@ -183,7 +183,7 @@ CREATE TABLE `pre_common_credit_rule_log` (
   `fid` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `total` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `cyclenum` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `extcredits1` int(10) NOT NULL DEFAULT '0',
+  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT='', -- 设置--威望 \扩展/积分设置`common_setting`.`extcredits`
   `extcredits2` int(10) NOT NULL DEFAULT '0',
   `extcredits3` int(10) NOT NULL DEFAULT '0',
   `extcredits4` int(10) NOT NULL DEFAULT '0',
@@ -200,7 +200,7 @@ CREATE TABLE `pre_common_credit_rule_log` (
 
 CREATE TABLE `common_member_count` (
   `uid` mediumint(8) unsigned NOT NULL COMMENT '用户id', -- 关联`common_member`.`uid`
-  `extcredits1` int(10) NOT NULL DEFAULT '0', -- 统计-数额s1
+  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 统计--威望 \扩展/积分设置`common_setting`.`extcredits`
   `extcredits2` int(10) NOT NULL DEFAULT '0',
   `extcredits3` int(10) NOT NULL DEFAULT '0',
   `extcredits4` int(10) NOT NULL DEFAULT '0',
