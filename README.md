@@ -130,108 +130,108 @@ SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
 
 ### 数据库设计
 
-#### ✨积分~奖励
+#### ✨积分~ [参考DiscuzX3](http://www.dz7.com.cn/library/database/)
 ~~~sql
  -- MySQL
 CREATE TABLE `common_credit_log` (
-  `logid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '积分记录id',
+  `logid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '积分日志id',
   `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '用户id', -- 关联`common_member`.`uid`
-  `operation` char(3) NOT NULL DEFAULT '' COMMENT '积分变更-项目类型', -- 项目'TRC' => '任务奖励积分'
-  `relatedid` int(10) unsigned NOT NULL COMMENT '积分变更-关联内容id',
-  `dateline` int(10) unsigned NOT NULL COMMENT '积分变更-时间',
-  `extcredits1` int(10) NOT NULL COMMENT '', -- 变更--威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL COMMENT '',
-  `extcredits3` int(10) NOT NULL COMMENT '',
-  `extcredits4` int(10) NOT NULL,
-  `extcredits5` int(10) NOT NULL,
-  `extcredits6` int(10) NOT NULL,
-  `extcredits7` int(10) NOT NULL,
-  `extcredits8` int(10) NOT NULL,
+  `operation` char(3) NOT NULL DEFAULT '' COMMENT '操作类型', -- 例如:'TRC' => '任务奖励积分'
+  `relatedid` int(10) unsigned NOT NULL COMMENT '操作相关id',
+  `dateline` int(10) unsigned NOT NULL COMMENT '记录时间',
+  `extcredits1` int(10) NOT NULL COMMENT '积分1变化值', --威望 \扩展/积分设置`common_setting`.`extcredits`
+  `extcredits2` int(10) NOT NULL COMMENT '积分2变化值',
+  `extcredits3` int(10) NOT NULL COMMENT '积分3变化值',
+  `extcredits4` int(10) NOT NULL COMMENT '积分4变化值',
+  `extcredits5` int(10) NOT NULL COMMENT '积分5变化值',
+  `extcredits6` int(10) NOT NULL COMMENT '积分6变化值',
+  `extcredits7` int(10) NOT NULL COMMENT '积分7变化值',
+  `extcredits8` int(10) NOT NULL COMMENT '积分8变化值',
   PRIMARY KEY (`logid`),
   KEY `uid` (`uid`),
   KEY `operation` (`operation`),
   KEY `relatedid` (`relatedid`),
   KEY `dateline` (`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='积分记录表';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='积分日志表';
 
-CREATE TABLE `pre_common_credit_log_field` (
-  `logid` mediumint(8) unsigned NOT NULL COMMENT '积分记录id',
-  `title` varchar(100) NOT NULL COMMENT '标题',
-  `text` text NOT NULL COMMENT '内容',
+CREATE TABLE `common_credit_log_field` (
+  `logid` mediumint(8) unsigned NOT NULL COMMENT '积分日志id',
+  `title` varchar(100) NOT NULL COMMENT '记录标题',
+  `text` text NOT NULL COMMENT '记录说明',
   KEY `logid` (`logid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='积分记录详情表';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='积分日志详情表';
 
-CREATE TABLE `pre_common_credit_rule` (
-  `rid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '积分策略id',
-  `rulename` varchar(20) NOT NULL DEFAULT '' COMMENT '策略名称',
-  `action` varchar(20) NOT NULL DEFAULT '' COMMENT '策略英文名',
+CREATE TABLE `common_credit_rule` (
+  `rid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '积分规则id',
+  `rulename` varchar(20) NOT NULL DEFAULT '' COMMENT '规则名称',
+  `action` varchar(20) NOT NULL DEFAULT '' COMMENT '规则action唯一KEY',
   `cycletype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '周期:0.一次;1.每天;2.整点;3.间隔分钟;4.不限;5.每月;6.每季度;7每年',
-  `cycletime` int(10) NOT NULL DEFAULT '0' COMMENT '间隔时间-小时|分钟', -- 对应cycletype:2|3
+  `cycletime` int(10) NOT NULL DEFAULT '0' COMMENT '间隔时间[小时|分钟]', -- 对应cycletype:2|3
   `rewardnum` tinyint(2) NOT NULL DEFAULT '1' COMMENT '奖励次数', -- 周期内最多奖励次数:0为不限次数
-  `norepeat` tinyint(1) NOT NULL DEFAULT '0' COMMENT '不重复累加',
-  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 设置--威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 金钱
-  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 贡献
-  `extcredits4` int(10) NOT NULL DEFAULT '0',
-  `extcredits5` int(10) NOT NULL DEFAULT '0',
-  `extcredits6` int(10) NOT NULL DEFAULT '0',
-  `extcredits7` int(10) NOT NULL DEFAULT '0',
-  `extcredits8` int(10) NOT NULL DEFAULT '0',
-  `fids` text NOT NULL,
+  `norepeat` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否去重[1去重;0不去重]', -- 不重复累加
+  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '扩展1', -- 威望 \扩展/积分设置`common_setting`.`extcredits`
+  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '扩展2', -- 金钱
+  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '扩展3', -- 贡献
+  `extcredits4` int(10) NOT NULL DEFAULT '0' COMMENT '扩展4',
+  `extcredits5` int(10) NOT NULL DEFAULT '0' COMMENT '扩展5',
+  `extcredits6` int(10) NOT NULL DEFAULT '0' COMMENT '扩展6',
+  `extcredits7` int(10) NOT NULL DEFAULT '0' COMMENT '扩展7',
+  `extcredits8` int(10) NOT NULL DEFAULT '0' COMMENT '扩展8',
+  `fids` text NOT NULL COMMENT '记录自定义策略版块ID',
   PRIMARY KEY (`rid`),
   UNIQUE KEY `action` (`action`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='积分策略表';
+) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='积分规则表';
 
-CREATE TABLE `pre_common_credit_rule_log` (
-  `clid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '用户id', -- 关联`common_member`.`uid`
-  `rid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '积分策略id',
-  `fid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '',
-  `total` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '',
-  `cyclenum` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '',
-  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 设置--威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '',
-  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '',
-  `extcredits4` int(10) NOT NULL DEFAULT '0',
-  `extcredits5` int(10) NOT NULL DEFAULT '0',
-  `extcredits6` int(10) NOT NULL DEFAULT '0',
-  `extcredits7` int(10) NOT NULL DEFAULT '0',
-  `extcredits8` int(10) NOT NULL DEFAULT '0',
-  `starttime` int(10) unsigned NOT NULL DEFAULT '0',
-  `dateline` int(10) unsigned NOT NULL DEFAULT '0',
+CREATE TABLE `common_credit_rule_log` (
+  `clid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '策略日志id',
+  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '策略日志所有者uid', -- 关联`common_member`.`uid`
+  `rid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '策略ID=积分规则id',
+  `fid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '版块ID',
+  `total` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '策略被执行总次数',
+  `cyclenum` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT ' 周期被执行次数',
+  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '扩展1', -- 威望 \扩展/积分设置`common_setting`.`extcredits`
+  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '扩展2', -- 金钱
+  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '扩展3', -- 贡献
+  `extcredits4` int(10) NOT NULL DEFAULT '0' COMMENT '扩展4',
+  `extcredits5` int(10) NOT NULL DEFAULT '0' COMMENT '扩展5',
+  `extcredits6` int(10) NOT NULL DEFAULT '0' COMMENT '扩展6',
+  `extcredits7` int(10) NOT NULL DEFAULT '0' COMMENT '扩展7',
+  `extcredits8` int(10) NOT NULL DEFAULT '0' COMMENT '扩展8',
+  `starttime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '周期开始时间',
+  `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '策略最后执行时间',
   PRIMARY KEY (`clid`),
   KEY `uid` (`uid`,`rid`,`fid`),
   KEY `dateline` (`dateline`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='积分策略生效记录表';
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='积分规则日志表';
 
 CREATE TABLE `common_member_count` (
   `uid` mediumint(8) unsigned NOT NULL COMMENT '用户id', -- 关联`common_member`.`uid`
-  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '', -- 统计--威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '',
-  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '',
-  `extcredits4` int(10) NOT NULL DEFAULT '0',
-  `extcredits5` int(10) NOT NULL DEFAULT '0',
-  `extcredits6` int(10) NOT NULL DEFAULT '0',
-  `extcredits7` int(10) NOT NULL DEFAULT '0',
-  `extcredits8` int(10) NOT NULL DEFAULT '0',
-  `friends` smallint(6) unsigned NOT NULL DEFAULT '0',
-  `posts` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `threads` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `digestposts` smallint(6) unsigned NOT NULL DEFAULT '0',
-  `doings` smallint(6) unsigned NOT NULL DEFAULT '0',
-  `blogs` smallint(6) unsigned NOT NULL DEFAULT '0',
-  `albums` smallint(6) unsigned NOT NULL DEFAULT '0',
-  `sharings` smallint(6) unsigned NOT NULL DEFAULT '0',
-  `attachsize` int(10) unsigned NOT NULL DEFAULT '0',
-  `views` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `oltime` smallint(6) unsigned NOT NULL DEFAULT '0',
-  `todayattachs` smallint(6) unsigned NOT NULL DEFAULT '0',
-  `todayattachsize` int(10) unsigned NOT NULL DEFAULT '0',
-  `feeds` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `follower` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `following` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `newfollower` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `blacklist` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '扩展1', -- 威望 \扩展/积分设置`common_setting`.`extcredits`
+  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '扩展2', -- 金钱
+  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '扩展3', -- 贡献
+  `extcredits4` int(10) NOT NULL DEFAULT '0' COMMENT '扩展4',
+  `extcredits5` int(10) NOT NULL DEFAULT '0' COMMENT '扩展5',
+  `extcredits6` int(10) NOT NULL DEFAULT '0' COMMENT '扩展6',
+  `extcredits7` int(10) NOT NULL DEFAULT '0' COMMENT '扩展7',
+  `extcredits8` int(10) NOT NULL DEFAULT '0' COMMENT '扩展8',
+  `friends` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '好友个数',
+  `posts` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '帖子数',
+  `threads` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '主题数',
+  `digestposts` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '精华数',
+  `doings` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '记录数',
+  `blogs` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '日志数',
+  `albums` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '相册数',
+  `sharings` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '分享数',
+  `attachsize` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上传附件占用的空间',
+  `views` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '空间查看数',
+  `oltime` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '在线时间',
+  `todayattachs` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '当天上传附件数',
+  `todayattachsize` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '当天上传附件容量',
+  `feeds` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '广播数',
+  `follower` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '听众数量',
+  `following` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '收听数量',
+  `newfollower` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '新增听众数量',
+  `blacklist` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '拉黑用户数',
   PRIMARY KEY (`uid`),
   KEY `posts` (`posts`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户数据统计表';
