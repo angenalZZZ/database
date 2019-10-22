@@ -238,6 +238,9 @@ CREATE TABLE `common_member_count` (
 
 ~~~
 
+#### ✨其它功能表
+
+    PURGE recyclebin; # oracle10g回收站Recycle清除Purge
 
 #### ✨其它常用字段
 
