@@ -5,6 +5,9 @@ show databases;
 -- 2.DB查询Query正常连接 Command='Query';
 show processlist;
 
+-- 连接缺省值
+show variables like '%packet%'; --包大小限制:默认max_allowed_packet=4M,建议16×1024×1024;前后端管道建立的时候用作参数使用;
+
 -- 修改密码
 SET PASSWORD FOR 'root'@'localhost' = PASSWORD('HGJ766GR767FKJU0');
 SET PASSWORD FOR 'root'@'%' = PASSWORD('HGJ766GR767FKJU0');
