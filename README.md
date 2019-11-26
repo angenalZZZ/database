@@ -96,7 +96,7 @@
     * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
  * DML（data manipulation language）数据操纵语言
     * 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
-    * ~获取数据~ 
+    * `获取数据` 
 ~~~sql
 /* 过滤数据 Filtering Data */
 SELECT name FROM users WHERE gender = 1 AND (age BETWEEN 20 AND 30) AND country IN ('CHINA','USA')
@@ -139,17 +139,17 @@ except                                   -- `except`减数与被减数
 SELECT name FROM users2
  -- 窗口函数 即 OLAP 实时分析处理(online analytical processing)
  -- <*聚合函数sum,avg,count,max,min;专用函数rank,dense_rank,row_number*> over([partition by <列清单>] order by <排序字段>)
-SELECT name, rank() over (partition by id,name order by income desc) as ranking FROM users -- `dense_rank`相同名次不会跳过
-SELECT pid,name,price, ave(price) over (order by pid rows 2 preceding) as moving_avg FROM products -- 截至2之前两行求平均
-SELECT pid,name,price, ave(price) over (order by pid rows 2 following) as moving_avg FROM products -- 截至2之后为汇总对象求平均
-SELECT pid,name,price, ave(price) over (order by pid rows between 1 preceding and 1 following) as moving_avg FROM products
+SELECT name, rank() over (partition by name order by income desc) as ranking FROM users -- `dense_rank`相同名次不会跳过
+SELECT pid,name, ave(price) over (order by pid rows 2 preceding) as moving_avg FROM products -- 截至2之前两行求平均
+SELECT pid,name, ave(price) over (order by pid rows 2 following) as moving_avg FROM products -- 截至2之后为汇总对象求平均
+SELECT pid,name, ave(price) over (order by pid rows between 1 preceding and 1 following) as moving_avg FROM products
 SELECT type, sum(income) as income_sum from products group by rollup(type) -- 同时得到合计和小计
-SELECT grouping(type),grouping(year), sum(income) as income_sum from products group by rollup(type,year) -- 得到null转0
-SELECT type,year, sum(income) as income_sum from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
+SELECT grouping(type),grouping(year), income_sum=sum(income) from products group by rollup(type,year) -- 得到null时转0
+SELECT type,year, income_sum=sum(income) from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
 ~~~
-    * ~SQLServer~ 
+> `SQLServer` ~ `常用语句`
 ~~~sql
--- 版本
+-- SQLServer版本
 SELECT @@VERSION -- Enterprise Edition、Standard Edition、Developer Edition
 -- --支持2012以上版本
 -- -- ALTER DATABASE dbname SET COMPATIBILITY_LEVEL = 110
