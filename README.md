@@ -124,8 +124,8 @@ SELECT name FROM users ROWS 5            -- 只取前5条
 SELECT name FROM users ROWS 6 TO 10      -- 从第6条取到第10条
  -- DB2
 SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
- -- SQLServer
- -- 记录的加法
+
+ -- SQLServer 记录的加法
 SELECT name FROM users1 
 union                                    -- `union`不包含重复行，`union all`包含重复行
 SELECT name FROM users2
@@ -133,11 +133,11 @@ GO
 SELECT name FROM users1 
 intersect                                -- `intersect`选取表的公共记录
 SELECT name FROM users2
- -- 记录的减法
+ -- SQLServer 记录的减法
 SELECT name FROM users1 
 except                                   -- `except`减数与被减数
 SELECT name FROM users2
- -- 窗口函数 即 OLAP 实时分析处理(online analytical processing)
+ -- SQLServer 窗口函数 即 OLAP 实时分析处理函数(online analytical processing)
  -- <*聚合函数sum,avg,count,max,min;专用函数rank,dense_rank,row_number*> over([partition by <列清单>] order by <排序字段>)
 SELECT name, rank() over (partition by name order by income desc) as ranking FROM users -- `dense_rank`相同名次不会跳过
 SELECT pid,name, ave(price) over (order by pid rows 2 preceding) as moving_avg FROM products -- 截至2之前两行求平均
@@ -146,6 +146,17 @@ SELECT pid,name, ave(price) over (order by pid rows between 1 preceding and 1 fo
 SELECT type, sum(income) as income_sum from products group by rollup(type) -- 同时得到合计和小计
 SELECT grouping(type),grouping(year), income_sum=sum(income) from products group by rollup(type,year) -- 得到null时转0
 SELECT type,year, income_sum=sum(income) from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
+ -- SQLServer 优化查询语句的方法
+ -- 1. 用exists替代distinct; 用exists替代in; 用not exists替代not in 
+ -- 2. 用表连接替换exists 
+ -- 3. 用索引提高效率; 避免在索引列上使用`函数`、`IS NULL`等计算 
+
+ -- MySQL 使用DECODE函数来减少处理时间(避免重复扫描相同的表或记录)
+SELECT 
+	COUNT(DECODE(type,'1',1,NULL)) typeCount1, COUNT(DECODE(type,'2',1,NULL)) typeCount2, 
+	AVG(DECODE(type,'1',price,NULL)) priceAvg1, AVG(DECODE(type,'2',price,NULL)) priceAvg2 
+FROM products 
+
 ~~~
 > `SQLServer` ~ `常用语句`
 ~~~sql
