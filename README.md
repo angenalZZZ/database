@@ -145,7 +145,7 @@ SELECT name, rank() over (partition by name order by income desc) as ranking FRO
 SELECT name, dense_rank() over (partition by name order by income desc) as rank FROM users -- `dense_rank`连续排名1,2,2,3
 SELECT pid,name, ave(price) over (order by pid rows 2 preceding) as moving_avg FROM products -- 截至2之前两行求平均
 SELECT pid,name, ave(price) over (order by pid rows 2 following) as moving_avg FROM products -- 截至2之后汇总再求平均
-SELECT pid,name, ave(price) over (order by pid rows between 1 preceding and 1 following) as moving_avg FROM products
+SELECT pid,name, ave(price) over (order by pid rows between 100 preceding and 60 following) as avg FROM products -- ave(60~100)
 SELECT type, sum(income) as income_sum from products group by rollup(type) -- 同时得到合计和小计
 SELECT grouping(type),grouping(year), income_sum=sum(income) from products group by rollup(type,year) -- 得到null时转0
 SELECT type,year, income_sum=sum(income) from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
