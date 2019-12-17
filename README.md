@@ -139,7 +139,10 @@ except                                   -- `except`减数与被减数
 SELECT name FROM users2
  -- SQLServer 窗口函数 即 OLAP 实时分析处理函数(online analytical processing)
  -- <*聚合函数sum,avg,count,max,min;专用函数rank,dense_rank,row_number*> over([partition by <列清单>] order by <排序字段>)
-SELECT name, rank() over (partition by name order by income desc) as ranking FROM users -- `dense_rank`相同名次不会跳过
+SELECT name, row_number() over (order by score desc) as ranking FROM scores  -- `row_number`可用于分页但效率一般
+SELECT name, ntile(3) over (order by score desc) as tile FROM scores  -- `ntile`排序后再进行评分(分区n=3表示分上中下3组)
+SELECT name, rank() over (partition by name order by income desc) as ranking FROM users -- `rank`跳跃排名
+SELECT name, dense_rank() over (partition by name order by income desc) as ranking FROM users --`dense_rank`连续排名
 SELECT pid,name, ave(price) over (order by pid rows 2 preceding) as moving_avg FROM products -- 截至2之前两行求平均
 SELECT pid,name, ave(price) over (order by pid rows 2 following) as moving_avg FROM products -- 截至2之后为汇总对象求平均
 SELECT pid,name, ave(price) over (order by pid rows between 1 preceding and 1 following) as moving_avg FROM products
