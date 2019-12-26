@@ -129,16 +129,18 @@ SELECT name FROM users FETCH FIRST 5 ROWS ONLY -- 只取前5条
 SELECT name FROM users1 
 union                                    -- `union`不包含重复行，`union all`包含重复行
 SELECT name FROM users2
-GO
+
 SELECT name FROM users1 
 intersect                                -- `intersect`选取表的公共记录
 SELECT name FROM users2
+
  -- SQLServer 记录的减法
 SELECT name FROM users1 
 except                                   -- `except`减数与被减数
 SELECT name FROM users2
+
  -- SQLServer 窗口函数 即 OLAP 实时分析处理函数(online analytical processing)
- -- <*聚合函数sum,avg,count,max,min;专用函数rank,dense_rank,row_number*> over([partition by <列清单>] order by <排序字段>)
+ -- <*聚合函数sum,avg,count,max,min;专用函数rank,dense_rank,row_number*> over([partition by <列清单>] order by <列清单>)
 SELECT name, row_number() over (order by score desc) as ranking FROM scores -- `row_number`可用于分页但效率一般!
 SELECT name, ntile(3) over (order by score desc) as tile FROM scores -- `ntile`排序后进行评分[分区n=3表示上中下3组]
 SELECT name, rank() over (partition by name order by income desc) as ranking FROM users -- `rank`跳跃排名:1,2,2,4
@@ -147,20 +149,27 @@ SELECT pid,name, ave(price) over (order by pid rows 2 preceding) as moving_avg F
 SELECT pid,name, ave(price) over (order by pid rows 2 following) as moving_avg FROM products -- 截至2之后汇总再求平均
 SELECT pid,name, ave(price) over (order by pid rows between 100 preceding and 60 following) as avg FROM products -- ave(60~100)
 SELECT type, sum(income) as income_sum from products group by rollup(type) -- 同时得到合计和小计
-SELECT grouping(type),grouping(year), income_sum=sum(income) from products group by rollup(type,year) -- 得到null时转0
+SELECT grouping(type),grouping(year), income_sum=sum(income) from products group by rollup(type,year) -- 当null时自动转0
 SELECT type,year, income_sum=sum(income) from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
+
  -- SQLServer 优化查询语句的方法
  -- 1. 用exists替代distinct; 用exists替代in; 用not exists替代not in 
- -- 2. 用表连接替换exists 
- -- 3. 用索引提高效率; 避免在索引列上使用`函数`、`IS NULL`等计算 
+ -- 2. 用表连接join替换exists 
+ -- 3. 用索引index提高效率; 避免在索引列上使用`函数`、`IS NULL`等计算 
 
  -- MySQL 使用DECODE函数来减少处理时间(避免重复扫描相同的表或记录)
-SELECT 
-	COUNT(DECODE(type,'1',1,NULL)) typeCount1, COUNT(DECODE(type,'2',1,NULL)) typeCount2, 
-	AVG(DECODE(type,'1',price,NULL)) priceAvg1, AVG(DECODE(type,'2',price,NULL)) priceAvg2 
+SELECT COUNT(DECODE(type,'1',1,NULL)) typeCount1, COUNT(DECODE(type,'2',1,NULL)) typeCount2, 
+       AVG(DECODE(type,'1',price,NULL)) priceAvg1, AVG(DECODE(type,'2',price,NULL)) priceAvg2 
 FROM products 
 
 ~~~
+
+> `Oracle` ~ `常用语句`
+~~~sql
+PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
+
+~~~
+
 > `SQLServer` ~ `常用语句`
 ~~~sql
 -- SQLServer版本
@@ -206,17 +215,17 @@ WHERE xp.name in (N'MS_Description')
 SELECT CONVERT(varchar(23),getdate(),121) as [完整日期时间], CONVERT(varchar(8),getdate(),112) as [日期] -- 21 or 121 | yyyy-mm-dd hh:mi:ss:mmm(24小时制)
 SELECT CONVERT(varchar(19),getdate(),120) as [日期时间], CONVERT(varchar(10),getdate(),20) as [日期]     -- 20 or 120 | yyyy-mm-dd hh:mi:ss(24小时制)
 SELECT CONVERT(varchar(10),getdate(),108) as [时间], CONVERT(varchar(14),getdate(),114) as [时间ms]
-GO
+
 IF EXISTS(SELECT TOP 1 * FROM sysobjects WHERE id=OBJECT_ID(N'datepartf') AND type='FN') DROP FUNCTION datepartf
-GO
+
 CREATE FUNCTION dbo.datepartf(@Source nvarchar(20),@PaddingChar nchar(1),@TotalWidth tinyint) RETURNS nvarchar(20) AS BEGIN DECLARE @Result nvarchar(20) SELECT @Result = REPLICATE(@PaddingChar, @TotalWidth - LEN(@Source)) + @Source RETURN @Result END
-GO
+
 SELECT dbo.datepartf(datepart(yyyy, getdate()),'0',4)+'-'
 	+dbo.datepartf(datepart(mm, getdate()),'0',2)+'-'
 	+dbo.datepartf(datepart(dd, getdate()),'0',2)
-GO
+
 SELECT datediff(dd,'2018-12-31',getdate()) as [相差几天]
-GO
+
 
 -- --加密MD5--
 SELECT MD5=(LOWER(SUBSTRING(sys.fn_sqlvarbasetostr(HASHBYTES('MD5','123456')), 3, 32)))
@@ -228,7 +237,7 @@ SELECT UPPER(RIGHT(CAST(sys.fn_varbintohexstr(CRYPT_GEN_RANDOM(10)) AS VARCHAR(3
 -- --随机整数--
 SELECT ABS(CONVERT(bigint,CRYPT_GEN_RANDOM(16))), ABS(CONVERT(bigint,CONVERT(varbinary,CRYPT_GEN_RANDOM(16),1)));
 
-GO
+
 
 -- --游标--
 declare @id int
@@ -245,16 +254,16 @@ END
 close cursor1
 deallocate cursor1
 
-GO
+
 -- --动态sql--
 EXEC SP_EXECUTESQL @STMT=N'SELECT * FROM sys.databases WHERE compatibility_level=@level ORDER BY name',@PARMS=N'@level tinyint',@level=110;
 
-GO
+
 -- --哪个引起了阻塞blk
 -- --exec sp_who active;
 -- --锁住了哪些资源？
 -- --exec sp_lock;
-GO
+
 -- --查看被锁语句--
 -- -- select request_session_id spid,OBJECT_NAME(resource_associated_entity_id) tableName from sys.dm_tran_locks where resource_type='OBJECT'
 -- --查看被锁表--
@@ -298,29 +307,29 @@ exec master..xp_cmdshell 'net use \\192.168.20.114\share "angenal" /USER:192.168
 backup database testDb to disk = '\\192.168.20.114\share\testDb.bak'
 
 
-GO
+
 DECLARE @dbname NVARCHAR(50)
 -- --检查日志文件名称[先切换到当前数据库]
 SELECT [name], [size] FROM sys.database_files
 -- --查看数据库的recovery_model_desc类型
 SELECT [name], recovery_model_desc FROM sys.databases WHERE [name]=@dbname AND recovery_model_desc='FULL'
 -- --如果是FULL类型，修改为SIMPLE类型
-GO
+
 USE [master]
-GO
+
 ALTER DATABASE @dbname SET RECOVERY SIMPLE WITH NO_WAIT
-GO
+
 ALTER DATABASE @dbname SET RECOVERY SIMPLE
 -- --收缩日志文件大小(单位是M)
 DBCC SHRINKFILE (@dbname + N'_log' , 10, TRUNCATEONLY)
 -- --恢复成FULL类型
-GO
+
 USE [master]
-GO
+
 ALTER DATABASE AFMS SET RECOVERY FULL WITH NO_WAIT
-GO
+
 ALTER DATABASE AFMS SET RECOVERY FULL
-GO
+
 
 -- --查看当前的存放位置 
 select * from sys.master_files
@@ -342,7 +351,7 @@ EXEC xp_instance_regwrite
 @value_name='DefaultData',  
 @type=REG_SZ,  
 @value='E:\MSSQL_MDF\data' 
-GO
+
 -- --修改默认的日志文件存放位置 即时生效
 EXEC master..xp_instance_regwrite  
 @rootkey='HKEY_LOCAL_MACHINE',  
@@ -350,13 +359,13 @@ EXEC master..xp_instance_regwrite
 @value_name='DefaultLog',  
 @type=REG_SZ,  
 @value='E:\MSSQL_MDF\log' 
-GO
+
 
 -- --查询数据库权限
 SELECT DISTINCT class_desc FROM fn_builtin_permissions(default) ORDER BY class_desc;
 SELECT * FROM fn_my_permissions(NULL, 'SERVER');
 SELECT * FROM fn_my_permissions(NULL, 'DATABASE');
-GO
+
 
 -- --链接外部服务器
 exec sys.sp_addlinkedserver '链接别名','数据库类型','SQLOLEDB','远程服务器名或ip地址' -- 数据库类型为空时-默认:sqlserver
@@ -364,11 +373,11 @@ exec sys.sp_addlinkedsrvlogin '链接别名','false',null,'用户名','密码'
 -- --select * from 链接别名.数据库名.dbo.表名
 exec sys.sp_droplinkedsrvlogin '数据库名',null
 exec sys.sp_dropserver '数据库名'
-GO
+
 
 -- --合并查询/逗号分隔结果
 select (stuff((select ','+a.UserName from HonorUser u inner join UserAccount a on u.UserId=a.Id where u.HonorId='1' for xml path('')),1,1,''))
-GO
+
 
 -- --字符集
 -- --制表符: CHAR(9)
@@ -395,12 +404,12 @@ select * from test
 -- ---------列转行---------------------------
 select id,name,quarter,number from test unpivot(number for quarter in([Q1],[Q2],[Q3],[Q4])) as unpvt
 -- ------------------------------------------
-GO
+
 
 -- --删除重复记录
 delete from test where id not in (select min(id) from test group by name); -- 重复的name
 select name from test group by name having min(number)>=3000; -- 记录number都大于3000的name
-GO
+
 
 --CPU占用高的20条语句(60分钟内) 
 SELECT TOP 20 db_name(qp.dbid) [db_name], last_execution_time, 
@@ -427,25 +436,25 @@ DECLARE @minSize int; SET @minsize = 1024 -- 清理日志文件最小1M
 SELECT [file_id],[state_desc] 状态,[size]/1024 AS [大小M],[max_size],[name],[physical_name] FROM sys.database_files WHERE [size]>@minsize
 -- SELECT [name],recovery_model_desc FROM sys.databases WHERE recovery_model_desc='FULL'
 SELECT database_id, total_log_size_in_bytes [分配], used_log_space_in_bytes [已占用], used_log_space_in_percent [使用率] FROM sys.dm_db_log_space_usage
-GO
+
 USE [master]
-GO
+
 ALTER DATABASE DBNAME SET RECOVERY SIMPLE WITH NO_WAIT
-GO
+
 ALTER DATABASE DBNAME SET RECOVERY SIMPLE
-GO
+
 USE [DBNAME]
-GO
+
 --收缩日志文件大小(单位是M)
 DBCC SHRINKFILE (N'DBNAME_log' , 1, TRUNCATEONLY)
 --恢复成FULL类型
-GO
+
 USE [master]
-GO
+
 ALTER DATABASE DBNAME SET RECOVERY FULL WITH NO_WAIT
-GO
+
 ALTER DATABASE DBNAME SET RECOVERY FULL
-GO
+
 -- 备份
 use dbName
 declare @bakfile nvarchar(200)
@@ -459,117 +468,10 @@ DBCC SHRINKFILE (N'DBNAME_log', 1, TRUNCATEONLY)
 
 ### 数据库设计
 
+
 #### ✨积分~ [参考DiscuzX3](http://www.dz7.com.cn/library/database/)
-~~~sql
- -- MySQL
-CREATE TABLE `common_credit_log` (
-  `logid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '积分日志id',
-  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '用户id', -- 关联`common_member`.`uid`
-  `operation` char(3) NOT NULL DEFAULT '' COMMENT '操作类型', -- 例如:'TRC' => '任务奖励积分'
-  `relatedid` int(10) unsigned NOT NULL COMMENT '操作相关id',
-  `dateline` int(10) unsigned NOT NULL COMMENT '记录时间',
-  `extcredits1` int(10) NOT NULL COMMENT '积分1变化值', --威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL COMMENT '积分2变化值',
-  `extcredits3` int(10) NOT NULL COMMENT '积分3变化值',
-  `extcredits4` int(10) NOT NULL COMMENT '积分4变化值',
-  `extcredits5` int(10) NOT NULL COMMENT '积分5变化值',
-  `extcredits6` int(10) NOT NULL COMMENT '积分6变化值',
-  `extcredits7` int(10) NOT NULL COMMENT '积分7变化值',
-  `extcredits8` int(10) NOT NULL COMMENT '积分8变化值',
-  PRIMARY KEY (`logid`),
-  KEY `uid` (`uid`),
-  KEY `operation` (`operation`),
-  KEY `relatedid` (`relatedid`),
-  KEY `dateline` (`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='积分日志表';
 
-CREATE TABLE `common_credit_log_field` (
-  `logid` mediumint(8) unsigned NOT NULL COMMENT '积分日志id',
-  `title` varchar(100) NOT NULL COMMENT '记录标题',
-  `text` text NOT NULL COMMENT '记录说明',
-  KEY `logid` (`logid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='积分日志详情表';
 
-CREATE TABLE `common_credit_rule` (
-  `rid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '积分规则id',
-  `rulename` varchar(20) NOT NULL DEFAULT '' COMMENT '规则名称',
-  `action` varchar(20) NOT NULL DEFAULT '' COMMENT '规则action唯一KEY',
-  `cycletype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '周期:0.一次;1.每天;2.整点;3.间隔分钟;4.不限;5.每月;6.每季度;7每年',
-  `cycletime` int(10) NOT NULL DEFAULT '0' COMMENT '间隔时间[小时|分钟]', -- 对应cycletype:2|3
-  `rewardnum` tinyint(2) NOT NULL DEFAULT '1' COMMENT '奖励次数', -- 周期内最多奖励次数:0为不限次数
-  `norepeat` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否去重[1去重;0不去重]', -- 不重复累加
-  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '扩展1', -- 威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '扩展2', -- 金钱
-  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '扩展3', -- 贡献
-  `extcredits4` int(10) NOT NULL DEFAULT '0' COMMENT '扩展4',
-  `extcredits5` int(10) NOT NULL DEFAULT '0' COMMENT '扩展5',
-  `extcredits6` int(10) NOT NULL DEFAULT '0' COMMENT '扩展6',
-  `extcredits7` int(10) NOT NULL DEFAULT '0' COMMENT '扩展7',
-  `extcredits8` int(10) NOT NULL DEFAULT '0' COMMENT '扩展8',
-  `fids` text NOT NULL COMMENT '记录自定义策略版块ID',
-  PRIMARY KEY (`rid`),
-  UNIQUE KEY `action` (`action`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='积分规则表';
-
-CREATE TABLE `common_credit_rule_log` (
-  `clid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '策略日志id',
-  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '策略日志所有者uid', -- 关联`common_member`.`uid`
-  `rid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '策略ID=积分规则id',
-  `fid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '版块ID',
-  `total` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '策略被执行总次数',
-  `cyclenum` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT ' 周期被执行次数',
-  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '扩展1', -- 威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '扩展2', -- 金钱
-  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '扩展3', -- 贡献
-  `extcredits4` int(10) NOT NULL DEFAULT '0' COMMENT '扩展4',
-  `extcredits5` int(10) NOT NULL DEFAULT '0' COMMENT '扩展5',
-  `extcredits6` int(10) NOT NULL DEFAULT '0' COMMENT '扩展6',
-  `extcredits7` int(10) NOT NULL DEFAULT '0' COMMENT '扩展7',
-  `extcredits8` int(10) NOT NULL DEFAULT '0' COMMENT '扩展8',
-  `starttime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '周期开始时间',
-  `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '策略最后执行时间',
-  PRIMARY KEY (`clid`),
-  KEY `uid` (`uid`,`rid`,`fid`),
-  KEY `dateline` (`dateline`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='积分规则日志表';
-
-CREATE TABLE `common_member_count` (
-  `uid` mediumint(8) unsigned NOT NULL COMMENT '用户id', -- 关联`common_member`.`uid`
-  `extcredits1` int(10) NOT NULL DEFAULT '0' COMMENT '扩展1', -- 威望 \扩展/积分设置`common_setting`.`extcredits`
-  `extcredits2` int(10) NOT NULL DEFAULT '0' COMMENT '扩展2', -- 金钱
-  `extcredits3` int(10) NOT NULL DEFAULT '0' COMMENT '扩展3', -- 贡献
-  `extcredits4` int(10) NOT NULL DEFAULT '0' COMMENT '扩展4',
-  `extcredits5` int(10) NOT NULL DEFAULT '0' COMMENT '扩展5',
-  `extcredits6` int(10) NOT NULL DEFAULT '0' COMMENT '扩展6',
-  `extcredits7` int(10) NOT NULL DEFAULT '0' COMMENT '扩展7',
-  `extcredits8` int(10) NOT NULL DEFAULT '0' COMMENT '扩展8',
-  `friends` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '好友个数',
-  `posts` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '帖子数',
-  `threads` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '主题数',
-  `digestposts` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '精华数',
-  `doings` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '记录数',
-  `blogs` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '日志数',
-  `albums` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '相册数',
-  `sharings` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '分享数',
-  `attachsize` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上传附件占用的空间',
-  `views` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '空间查看数',
-  `oltime` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '在线时间',
-  `todayattachs` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '当天上传附件数',
-  `todayattachsize` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '当天上传附件容量',
-  `feeds` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '广播数',
-  `follower` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '听众数量',
-  `following` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '收听数量',
-  `newfollower` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '新增听众数量',
-  `blacklist` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '拉黑用户数',
-  PRIMARY KEY (`uid`),
-  KEY `posts` (`posts`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户数据统计表';
-
-~~~
-
-#### ✨其它功能表
-
-    PURGE recyclebin; # oracle10g回收站Recycle清除Purge
 
 #### ✨其它常用字段
 
