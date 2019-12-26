@@ -164,13 +164,13 @@ FROM products
 
 ~~~
 
-> `Oracle` ~ `常用语句`
+> [`Oracle`](https://www.oracle.com) ~ `sql语句`
 ~~~sql
 PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 
 ~~~
 
-> `SQLServer` ~ `常用语句`
+> [`SQLServer`](https://www.microsoft.com/zh-cn/sql-server) ~ `sql语句`
 ~~~sql
 -- SQLServer版本
 SELECT @@VERSION -- Enterprise Edition、Standard Edition、Developer Edition
