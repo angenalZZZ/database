@@ -140,17 +140,17 @@ except                                   -- `except`减数与被减数
 SELECT name FROM users2
 
  -- SQLServer 窗口函数 即 OLAP 实时分析处理函数(online analytical processing)
- -- <*聚合函数sum,avg,count,max,min;专用函数rank,dense_rank,row_number*> over([partition by <列清单>] order by <列清单>)
-SELECT name, row_number() over (order by score desc) as ranking FROM scores -- `row_number`可用于分页但效率一般!
-SELECT name, ntile(3) over (order by score desc) as tile FROM scores -- `ntile`排序后进行评分[分区n=3表示上中下3组]
-SELECT name, rank() over (partition by name order by income desc) as ranking FROM users -- `rank`跳跃排名:1,2,2,4
-SELECT name, dense_rank() over (partition by name order by income desc) as rank FROM users -- `dense_rank`连续排名1,2,2,3
-SELECT pid,name, ave(price) over (order by pid rows 2 preceding) as moving_avg FROM products -- 截至2之前两行求平均
-SELECT pid,name, ave(price) over (order by pid rows 2 following) as moving_avg FROM products -- 截至2之后汇总再求平均
-SELECT pid,name, ave(price) over (order by pid rows between 100 preceding and 60 following) as avg FROM products -- ave(60~100)
+ -- :聚合函数sum,avg,count,max.. :专用函数<row_number,rank..> over([partition by <列清单>] order by <列清单>)
+SELECT name, row_number() over (order by score desc) FROM scores -- `row_number`可用于分页但效率一般!
+SELECT name, ntile(3) over (order by score desc) FROM scores -- `ntile`排序后进行评分[分区n=3表示上中下3组]
+SELECT name, rank() over (partition by name order by income desc) FROM users -- `rank`跳跃排名:1,2,2,4
+SELECT name, dense_rank() over (partition by name order by income desc) FROM users -- `dense_rank`连续排名1,2,2,3
+SELECT pid,name, ave(price) over (order by pid rows 2 preceding) FROM products -- 截至2之前两行求平均
+SELECT pid,name, ave(price) over (order by pid rows 2 following) FROM products -- 截至2之后汇总再求平均
+SELECT pid,name, ave(price) over (order by pid rows between 100 preceding and 60 following) FROM products -- ave(60~100)
 SELECT type, sum(income) as income_sum from products group by rollup(type) -- 同时得到合计和小计
-SELECT grouping(type),grouping(year), income_sum=sum(income) from products group by rollup(type,year) -- 当null时自动转0
-SELECT type,year, income_sum=sum(income) from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
+SELECT grouping(type),grouping(year), sum(income) from products group by rollup(type,year) -- null自动转0
+SELECT type,year, sum(income) from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
 
  -- SQLServer 优化查询语句的方法
  -- 1. 用exists替代distinct; 用exists替代in; 用not exists替代not in 
