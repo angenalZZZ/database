@@ -145,11 +145,11 @@ SELECT name, row_number() over (order by score desc) FROM scores -- `row_number`
 SELECT name, ntile(3) over (order by score desc) FROM scores -- `ntile`排序后进行评分[分区n=3表示上中下3组]
 SELECT name, rank() over (partition by name order by income desc) FROM users -- `rank`跳跃排名:1,2,2,4
 SELECT name, dense_rank() over (partition by name order by income desc) FROM users -- `dense_rank`连续排名1,2,2,3
-SELECT pid,name, ave(price) over (order by pid rows 2 preceding) FROM products -- 截至2之前两行求平均
-SELECT pid,name, ave(price) over (order by pid rows 2 following) FROM products -- 截至2之后汇总再求平均
-SELECT pid,name, ave(price) over (order by pid rows between 100 preceding and 60 following) FROM products -- ave(60~100)
+SELECT pid,name, avg(price) over (order by pid rows 2 preceding) FROM products -- 截至2之前两行求平均
+SELECT pid,name, avg(price) over (order by pid rows 2 following) FROM products -- 截至2之后汇总再求平均
+SELECT pid,name, avg(price) over (order by pid rows between 100 preceding and 60 following) FROM products -- 60~100
 SELECT type, sum(income) as income_sum from products group by rollup(type) -- 同时得到合计和小计
-SELECT grouping(type),grouping(year), sum(income) from products group by rollup(type,year) -- null自动转0
+SELECT grouping(type),grouping(year), sum(income) from products group by rollup(type,year) -- 当null时自动转0
 SELECT type,year, sum(income) from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
 
  -- SQLServer 优化查询语句的方法
