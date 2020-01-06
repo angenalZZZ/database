@@ -6,8 +6,8 @@
 
 ## 数据库管理系统
     Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
-    一般具有存储、截取、安全保障、备份等基础功能。  数据库管理系统可以依据它所支持的数据库模型来作分类，例如`关系式`、`XML`；
-    或依据所支持的计算机类型来作分类，例如服务器群集、移动电话； 或依据所用查询语言来作分类，例如`SQL`、`XQuery`；
+    一般具有存储、截取、安全保障、备份等基础功能。  数据库管理系统可以依据它所支持的数据库模型来作分类，例如`关系式`、`XML`
+    或依据所支持的计算机类型来作分类，例如服务器群集、移动电话； 或依据所用查询语言来作分类，例如`SQL`、`XQuery`
     或依据性能冲量重点来作分类，例如最大规模、最高运行速度；亦或其他的分类方式。
     不论使用哪种分类方式，一些`DBMS`能够跨类别，例如，同时支持多种查询语言。
 
@@ -152,11 +152,6 @@ SELECT type, sum(income) as income_sum from products group by rollup(type) -- �
 SELECT grouping(type),grouping(year), sum(income) from products group by rollup(type,year) -- 当null时自动转0
 SELECT type,year, sum(income) from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
 
- -- SQLServer 优化查询语句的方法
- -- 1. 用exists替代distinct; 用exists替代in; 用not exists替代not in 
- -- 2. 用表连接join替换exists 
- -- 3. 用索引index提高效率; 避免在索引列上使用`函数`、`IS NULL`等计算 
-
  -- MySQL 使用DECODE函数来减少处理时间(避免重复扫描相同的表或记录)
 SELECT COUNT(DECODE(type,'1',1,NULL)) typeCount1, COUNT(DECODE(type,'2',1,NULL)) typeCount2, 
        AVG(DECODE(type,'1',price,NULL)) priceAvg1, AVG(DECODE(type,'2',price,NULL)) priceAvg2 
@@ -165,12 +160,17 @@ FROM products
 ~~~
 
 > [`Oracle`](https://www.oracle.com) ~ `sql语句`
+
 ~~~sql
 PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
-
 ~~~
 
 > [`SQLServer`](https://www.microsoft.com/zh-cn/sql-server) ~ `sql语句`
+ * 优化查询语句的方法
+ 	* 用exists替代distinct; 用exists替代in; 用not exists替代not in 
+	* 用表连接join替换exists 
+	* 用索引index提高效率; 避免在索引列上使用`函数`、`IS NULL`等计算 
+
 ~~~sql
 -- SQLServer版本
 SELECT @@VERSION -- Enterprise Edition、Standard Edition、Developer Edition
