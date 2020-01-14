@@ -216,6 +216,25 @@ WHERE xp.name in (N'MS_Description')
 
 
 -- --日期时间-- https://www.aliyun.com/jiaocheng/1399735.html
+SET DATEFIRST 1; SELECT @@DATEFIRST [星期一为每周第一天];
+SELECT SYSDATETIME(), SYSDATETIMEOFFSET()  -- 时区offset +08:00
+SELECT SYSUTCDATETIME(), CURRENT_TIMESTAMP -- UTC时间, 时间戳timestamp等价于getdate()
+SELECT GETDATE(), GETUTCDATE()             -- 当前本地时间getdate(), UTC时间戳
+-- --时间取值-- DateAdd,DateDiffl; DateName,DatePart;
+-- -- 年 yyyy,yy 季度 qq,q 月 mm,m 年中的日 dy,y 日 dd,d 周 wk,ww 星期 dw,w,weekday
+-- -- 时 hh 分 mi,n 秒 ss,s 毫秒 ms 微妙 mcs 纳秒 ns
+
+SELECT IsDate('2020-01-01') -- 是否为有效时间
+SELECT DateFromParts(2020,1,1) -- 支持2012以上版本
+SELECT EOMONTH(DateFromParts(2020,1,1)) -- 所在月份最后一天 2020-1-31
+select dateadd(mm,datediff(mm,0,getdate()),0) -- 本月第一天
+select dateadd(wk,datediff(wk,0,getdate()),0) -- 本周星期一
+select dateadd(yy,datediff(yy,0,getdate()),0) -- 今年第一天
+select dateadd(qq,datediff(qq,-1,getdate()),0) -- 下个季度第一天
+select dateadd(dd,-day(getdate()),getdate()) -- 上个月最后一天
+select dateadd(year,-1,getdate()) -- 去年同一天
+select dateadd(year,datediff(year,0,dateadd(year,1,getdate())),-1) -- 今年最后一天
+
 SELECT CONVERT(varchar(23),getdate(),121) as [完整日期时间], CONVERT(varchar(8),getdate(),112) as [日期] -- 21 or 121 | yyyy-mm-dd hh:mi:ss:mmm(24小时制)
 SELECT CONVERT(varchar(19),getdate(),120) as [日期时间], CONVERT(varchar(10),getdate(),20) as [日期]     -- 20 or 120 | yyyy-mm-dd hh:mi:ss(24小时制)
 SELECT CONVERT(varchar(10),getdate(),108) as [时间], CONVERT(varchar(14),getdate(),114) as [时间ms]
