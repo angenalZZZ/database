@@ -589,7 +589,7 @@ postgres HGJ766GR767FKJU0
 
 ### 邮箱.LOGIN.ACCOUNTS.
 ~~~
-angenals@163.com HGJ766GR : smtp.163.com : 465
+angenals@163.com HGJ766GR	smtp.163.com 465 # http://help.163.com/09/1224/17/5RAJ4LMH00753VB8.html
 
 ~~~
 
