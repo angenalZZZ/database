@@ -575,3 +575,16 @@ DBCC SHRINKFILE (N'DBNAME_log', 1, TRUNCATEONLY)
     PageSize     整页大小
     Total        总条数
     
+
+----
+
+### 数据库.LOGIN.ACCOUNTS.
+~~~
+sa HGJ766GR767FKJU0
+root HGJ766GR767FKJU0
+admin HGJ766GR767FKJU0
+postgres HGJ766GR767FKJU0
+
+~~~
+
+
