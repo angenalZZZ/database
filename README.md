@@ -96,7 +96,7 @@
     * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
  * DML（data manipulation language）数据操纵语言
     * 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
-    * `获取数据`,`sql语句`优化查询的方法 
+ * `IO优化` & `sql语句优化` 
  	* 用exists替代distinct; 用exists替代in; 用not exists替代not in 
 	* 用表连接join替换exists 
 	* 用索引index提高查询效率，替换`NULL`字段为默认零值 
