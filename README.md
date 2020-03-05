@@ -96,7 +96,20 @@
     * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
  * DML（data manipulation language）数据操纵语言
     * 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
-    * `获取数据` 
+    * `获取数据`,`sql语句`优化查询的方法 
+ 	* 用exists替代distinct; 用exists替代in; 用not exists替代not in 
+	* 用表连接join替换exists 
+	* 用索引index提高查询效率，替换`NULL`字段为默认零值 
+	* 避免在index索引列上使用`函数`、`IS NULL`等计算，`NULL`字段默认值等表设计 
+	* 避免在where条件语句中使用`!=`或`<>`，不要用`order by rand()` 
+	* 避免在where中使用`OR`，应该将`OR`使用`UNION ALL`进行改写 
+	* 模糊匹配like尽量使用后置匹配`like 'abc%'`才会走索引，减少查询时间 
+	* 尽量使用表变量`with t as()`代替临时表`select into t from`，临时表常用于定时任务 
+	* 临时表插入数据量大时-用`select into`代替`create table`，数据量少时反之
+	* 临时表用于一些重复的数据筛选大数据表，删除或清空t前-先进行`truncate table` 
+	* 把IP地址存成 `unsigned int` 在where条件语句 `IP between ip1 and ip2` 
+	* 避免大事务操作，提高系统并发能力。
+
 ~~~sql
 /* 过滤数据 Filtering Data */
 SELECT name FROM users WHERE gender = 1 AND (age BETWEEN 20 AND 30) AND country IN ('CHINA','USA')
@@ -166,20 +179,6 @@ PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 ~~~
 
 > [`SQLServer`](https://www.microsoft.com/zh-cn/sql-server) ~ `sql语句`
- * 优化查询`sql语句`的方法 
- 	* 用exists替代distinct; 用exists替代in; 用not exists替代not in 
-	* 用表连接join替换exists 
-	* 用索引index提高查询效率，替换`NULL`字段为默认零值 
-	* 避免在index索引列上使用`函数`、`IS NULL`等计算，`NULL`字段默认值等表设计 
-	* 避免在where条件语句中使用`!=`或`<>`，不要用`order by rand()` 
-	* 避免在where中使用`OR`，应该将`OR`使用`UNION ALL`进行改写 
-	* 模糊匹配like尽量使用后置匹配`like 'abc%'`才会走索引，减少查询时间 
-	* 尽量使用表变量`with t as()`代替临时表`select into t from`，临时表常用于定时任务 
-	* 临时表插入数据量大时-用`select into`代替`create table`，数据量少时反之
-	* 临时表用于一些重复的数据筛选大数据表，删除或清空t前-先进行`truncate table` 
-	* 把IP地址存成 `unsigned int` 在where条件语句 `IP between ip1 and ip2` 
-	* 避免大事务操作，提高系统并发能力。
-
 ~~~sql
 -- SQLServer版本
 SELECT @@VERSION -- Enterprise Edition、Standard Edition、Developer Edition
