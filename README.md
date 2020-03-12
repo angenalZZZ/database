@@ -153,9 +153,9 @@ except                                   -- `except`减数与被减数
 SELECT name FROM users2
 
  -- SQLServer 记录的合并
-MERGE INTO TargetTable AS T -- 目标:源表-课程
+MERGE INTO Courses AS T -- 目标:源表-课程
 USING (SELECT Id,Name,CreateUserId,CreateUserName FROM TMP_Courses) AS S -- 来源:新增临时表-课程
-ON S.Name=T.Name -- 比较:关系 ; 避免重复新增记录
+ON S.Name=T.Name -- 比较:关系条件; 避免重复添加记录:
 WHEN MATCHED THEN -- 以前添加过的进行更新
 	update set T.LastUpdateTime=getdate()
 WHEN NOT MATCHED THEN -- 以前没有添加过的进行新增
