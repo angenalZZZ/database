@@ -163,13 +163,13 @@ WHEN NOT MATCHED THEN -- 以前没有添加过的进行新增
 
  -- SQLServer 窗口函数 即 OLAP 实时分析处理函数(online analytical processing)
  -- :聚合函数sum,avg,count,max.. :专用函数<row_number,rank..> over([partition by <列清单>] order by <列清单>)
-SELECT name, row_number() over (order by score desc) FROM scores -- `row_number`可用于分页但效率一般!
-SELECT name, ntile(3) over (order by score desc) FROM scores -- `ntile`排序后进行评分[分区n=3表示上中下3组]
-SELECT name, rank() over (partition by name order by income desc) FROM users -- `rank`跳跃排名:1,2,2,4
-SELECT name, dense_rank() over (partition by name order by income desc) FROM users -- `dense_rank`连续排名1,2,2,3
-SELECT pid,name,avg(price) over (order by pid rows 2 preceding) FROM products -- 截至2之前两行求平均
-SELECT pid,name,avg(price) over (order by pid rows 2 following) FROM products -- 截至2之后汇总再求平均
-SELECT pid,name,avg(price) over (order by pid rows between 20 preceding and 10 following) FROM products -- 10~20
+SELECT name, row_number() over(order by score desc) FROM scores -- `row_number`可用于分页但效率一般!
+SELECT name, ntile(3) over(order by score desc) FROM scores -- `ntile`排序后进行评分[分区n=3表示上中下3组]
+SELECT name, rank() over(partition by name order by income desc) FROM users -- `rank`跳跃排名:1,2,2,4
+SELECT name, dense_rank() over(partition by name order by income desc) FROM users -- `dense_rank`连续排名1,2,2,3
+SELECT pid,name,avg(price) over(order by pid rows 2 preceding) FROM products -- 截至2之前两行求平均
+SELECT pid,name,avg(price) over(order by pid rows 2 following) FROM products -- 截至2之后汇总再求平均
+SELECT pid,name,avg(price) over(order by pid rows between 20 preceding and 10 following) FROM products -- 10~20
 SELECT type, sum(income) as income_sum from products group by rollup(type) -- 同时得到合计和小计
 SELECT grouping(type),grouping(year), sum(income) from products group by rollup(type,year) -- 当null时自动转0
 SELECT type,year, sum(income) from products group by cube(type,year) -- 搭积木(把所有可能的组合)汇总到一个结果中
