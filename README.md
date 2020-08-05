@@ -113,11 +113,11 @@
   (8) SELECT (9) DISTINCT (11) <Top Num> <select list>
   (1) FROM [left_table]
   (3) <join_type> JOIN <right_table>
-  (2)             ON <join_condition>
-  (4) WHERE <where_condition>
+  (2)             ON <join_condition> -- 生成<join_type>临时表(已通过该条件过滤了tables)
+  (4) WHERE <where_condition>    -- 不能用聚合函数.. 不直接支持<join_type>临时表(可用于过滤该临时表)
   (5) GROUP BY <group_by_list>
-  (6) WITH <CUBE | RollUP>
-  (7) HAVING <having_condition>
+  (6) WITH <CUBE | RollUP ...>
+  (7) HAVING <having_condition>  -- 可以用聚合函数sum,avg,count,max..
   (10)ORDER BY <order_by_list>
 ~~~
 
