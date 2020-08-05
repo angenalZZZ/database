@@ -109,6 +109,7 @@
 	* 把IP地址存成 `unsigned int` 在where条件语句 `IP between ip1 and ip2` 
 	* 避免大事务操作，提高系统并发能力。
  * `SQL执行顺序`
+~~~sql
 	(8) SELECT (9) DISTINCT (11) <Top Num> <select list>
 	(1) FROM [left_table]
 	(3) <join_type> JOIN <right_table>
@@ -118,6 +119,7 @@
 	(6) WITH <CUBE | RollUP>
 	(7) HAVING <having_condition>
 	(10)ORDER BY <order_by_list>
+~~~
 
 ~~~sql
 /* 过滤数据 Filtering Data */
