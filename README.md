@@ -89,25 +89,24 @@
 
 #### SQL查询语句
 
- * DDL（data definition language）数据库定义语言
+ * `DDL`（data definition language）数据库定义语言
     * 定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
- * DCL（Data Control Language）数据库控制语言
+ * `DCL`（Data Control Language）数据库控制语言
     * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
- * DML（data manipulation language）数据操纵语言
+ * `DML`（data manipulation language）数据操纵语言
     * 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
- * `IO优化` & `sql语句优化` 
- 	* 用exists替代distinct; 用exists替代in; 用not exists替代not in 
-	* 用表连接join替换exists 
-	* 用索引index提高查询效率，替换`NULL`字段为默认零值 
-	* 避免在index索引列上使用`函数`、`IS NULL`等计算，`NULL`字段默认值等表设计 
-	* 避免在where条件语句中使用`!=`或`<>`，不要用`order by rand()` 
-	* 避免在where中使用`OR`，应该将`OR`使用`UNION ALL`进行改写 
-	* 模糊匹配like尽量使用后置匹配`like 'abc%'`才会走索引，减少查询时间 
+ * `SQL优化` & `IO优化(Network&Disk)` 
+	* 用索引index提高查询效率，替换`NULL`字段为`NOT NULL`并设置默认值 
+	* 避免在index索引列上使用`函数`、`IS NULL`、`OR`等-导致全表扫描 
+	* 避免在where中使用`OR`，应该将`OR`使用`UNION`进行改写 
+	* 避免在where条件语句中使用`!=`或`<>`，不要用`order by rand()`导致全表扫描 
+	* 模糊查询like尽量使用后置匹配`like 'abc%'`才会走索引-避免全表扫描
+ 	* 用表连接join替换exists; 用exists替代distinct; 用exists替代in; 用not exists替代not in 
 	* 尽量使用表变量`with t as()`代替临时表`select into t from`，临时表常用于定时任务 
 	* 临时表插入数据量大时-用`select into`代替`create table`，数据量少时反之
 	* 临时表用于一些重复的数据筛选大数据表，删除或清空t前-先进行`truncate table` 
 	* 把IP地址存成 `unsigned int` 在where条件语句 `IP between ip1 and ip2` 
-	* 避免大事务操作，提高系统并发能力。
+	* 避免大事务操作，对表进行分区、分表、分库等，从而提高系统并发能力。
  * `SQL执行顺序`
 ~~~sql
   (8) SELECT (9) DISTINCT (11) <Top Num> <select list>
