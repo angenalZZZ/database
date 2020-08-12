@@ -97,27 +97,27 @@
     * 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
  * `SQL优化` & `IO优化(Network&Disk)` 
 	* 用索引index提高查询效率，替换`NULL`字段为`NOT NULL`并设置默认值 
-	* 避免在index索引列上使用`函数`、`IS NULL`、`OR`等-导致全表扫描 
+	* 避免在index索引列上使用`函数`、`IS NULL`、`OR`等 导致全表扫描 
 	* 避免在where中使用`OR`，应该将`OR`使用`UNION`进行改写 
-	* 避免在where条件语句中使用`!=`或`<>`，不要用`order by rand()`导致全表扫描 
-	* 模糊查询like尽量使用后置匹配`like 'abc%'`才会走索引-避免全表扫描
+	* 避免在where中使用`1=1`、`!=`、`<>`、`like '%abc%'`，不要用`order by rand()` 导致全表扫描 
+	* 模糊查询时like尽量使用后置匹配`like 'abc%'`才会走索引 避免全表扫描
  	* 用表连接join替换exists; 用exists替代distinct; 用exists替代in; 用not exists替代not in 
 	* 尽量使用表变量`with t as()`代替临时表`select into t from`，临时表常用于定时任务 
 	* 临时表插入数据量大时-用`select into`代替`create table`，数据量少时反之
 	* 临时表用于一些重复的数据筛选大数据表，删除或清空t前-先进行`truncate table` 
 	* 把IP地址存成 `unsigned int` 在where条件语句 `IP between ip1 and ip2` 
-	* 避免大事务操作，对表进行分区、分表、分库等，从而提高系统并发能力。
+	* 拆分大事务操作，设计时进行表分区、分表、分库等，从而提高系统并发能力
  * `SQL执行顺序`
 ~~~sql
-  (8) SELECT (9) DISTINCT (11) <Top Num> <select list>
-  (1) FROM [left_table]
-  (3) <join_type> JOIN <right_table>
-  (2)             ON <join_condition> -- 生成<join_type>临时表(已通过该条件过滤了tables)
-  (4) WHERE <where_condition>    -- 不能用聚合函数.. 不直接支持<join_type>临时表(可用于过滤该临时表)
-  (5) GROUP BY <group_by_list>
-  (6) WITH <CUBE | RollUP ...>
-  (7) HAVING <having_condition>  -- 可以用聚合函数sum,avg,count,max..
-  (10)ORDER BY <order_by_list>
+  (8) SELECT (9)DISTINCT (11)<Top Num> <available_columns_list> -- 减少数据除重、无效字段的数据查询
+  (1) FROM [left_table]               -- 选取表，将多个表数据通过笛卡尔积变成一个虚表
+  (3) <join_type> JOIN <right_table>  -- 用于添加筛选数据到虚表中，例如left_join会将左表的剩余数据添加到虚表
+  (2)             ON <join_condition> -- 对笛卡尔积的虚表进行筛选
+  (4) WHERE <where_condition>    -- 对上述虚表进行筛选,减少用聚合函数,最大化利用索引; 不直接支持<join_type>临时表(可用于过滤该临时表)
+  (5) GROUP BY <group_by_list>   -- 分组，用HAVING子句进行分组筛选
+  (6) WITH <CUBE | RollUP | NOLOCK ...> -- 选取表查询规则
+  (7) HAVING <having_condition>  -- 可用聚合函数sum,avg,count...进行聚合筛选
+  (10)ORDER BY <order_by_list>   -- 排序条件,减少用聚合函数
 ~~~
 
 ~~~sql
