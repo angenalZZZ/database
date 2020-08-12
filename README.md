@@ -112,9 +112,9 @@
   (8) SELECT (9)DISTINCT (11)<Top Num> <available_columns_list> -- 减少数据除重、无效字段的数据查询
   (1) FROM [left_table]               -- 选取表，将多个表数据通过笛卡尔积变成一个虚表
   (3) <join_type> JOIN <right_table>  -- 用于添加筛选数据到虚表中，例如left_join会将左表的剩余数据添加到虚表
-  (2)             ON <join_condition> -- 对笛卡尔积的虚表进行筛选
+  (2)             ON <join_condition> -- 对于添加筛选数据的虚表进行筛选
   (4) WHERE <where_condition>    -- 对上述虚表进行筛选,减少用聚合函数,最大化利用索引; 不直接支持<join_type>临时表(可用于过滤该临时表)
-  (5) GROUP BY <group_by_list>   -- 分组，用HAVING子句进行分组筛选
+  (5) GROUP BY <group_by_list>   -- 分组可用HAVING子句进行分组筛选
   (6) WITH <CUBE | RollUP | NOLOCK ...> -- 选取表查询规则
   (7) HAVING <having_condition>  -- 可用聚合函数sum,avg,count...进行聚合筛选
   (10)ORDER BY <order_by_list>   -- 排序条件,减少用聚合函数
