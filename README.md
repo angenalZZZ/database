@@ -197,6 +197,35 @@ FROM products
 PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 ~~~
 
+> [`MySQL`](https://www.mysql.com) ~ `sql语句`
+~~~sql
+# 安装数据库
+$ sudo apt-get update
+$ sudo apt-get install mysql-server  # 默认版本 <CentOS7> sudo yum install mariadb mariadb-server
+$ sudo mysql_secure_installation     # 安装配置
+$ sudo systemctl status mysql        # 检查状态
+$ sudo systemctl enable mysql        # 开机启动
+$ ps aux |grep mysqld　　　　　       # 查看进程 /usr/sbin/mysqld --daemonize --pid-file=/run/mysqld/mysqld.pid
+$ cat /etc/mysql/debian.cnf          # 查看系统密码
+$ mysql -u debian-sys-maint -p       # 准备修改密码
+> use mysql;
+> update mysql.user set authentication_string=password('root') where user='root'; # and Host ='localhost';
+> update user set plugin="mysql_native_password";
+> flush privileges; quit;
+$ sudo service mysql restart          # 重启 systemctl restart mysql
+$ mysql -P3306 -uroot -p < init.sql   # 以root身份登录并执行脚本> source init.sql
+# 配置远程访问 (@'localhost'本机访问; @'%'所有主机都可连接)
+> CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+> select * from user where user='root' \G;  # 查询当前用户: SELECT USER();
+> grant select,insert,update,delete,create,drop,index,alter on dbname.* to newuser@192.168.1.* identified by 'root';
+> GRANT ALL PRIVILEGES ON dbname.* TO 'newuser'@'%' IDENTIFIED BY 'root'; # 授权newuser
+> GRANT ALL PRIVILEGES ON *.* TO root@localhost IDENTIFIED BY 'root'; # 默认授权
+> SET PASSWORD FOR 'root'@'%' = PASSWORD('root');     # 设置密码为root
+> mysqladmin -u root password 123456                  # 初始化密码
+> mysqladmin -u root -p 123456 password HGJ766GR767FKJU0 # 修改密码
+> mysqladmin -u root -p shutdown                      # 关闭mysql
+~~~
+
 > [`SQLServer`](https://www.microsoft.com/zh-cn/sql-server) ~ `sql语句`
 ~~~sql
 -- SQLServer版本
