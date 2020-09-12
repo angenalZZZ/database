@@ -37,8 +37,9 @@
 
 #### 内存数据库 | 键值（key-value）数据库
 
-- Redis
-- LevelDB（Google）
+- [Redis（Salvatore Sanfilippo）](https://github.com/angenalZZZ/doc/blob/master/redis缓存服务.md)、[中文官网](http://www.redis.cn)
+- [Rocksdb（Facebook）](https://github.com/facebook/rocksdb/blob/master/LANGUAGE-BINDINGS.md)
+- [LevelDB（Google）](https://github.com/google/leveldb)
 
 ----
 
