@@ -226,7 +226,10 @@ $ mysql -P3306 -uroot -p < init.sql   # 以root身份登录并执行脚本> sour
 > mysqladmin -u root -p shutdown                      # 关闭mysql
 ~~~
 
-> [`SQLServer`](https://www.microsoft.com/zh-cn/sql-server) ~ `sql语句`
+> [`SQLServer`](https://www.microsoft.com/zh-cn/sql-server) ~ `sql语句` ~ [`github.com/microsoft/sql-server-samples`](https://github.com/microsoft/sql-server-samples)
+  - [Wide World Importers sample database v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/wide-world-importers-v1.0) 是 SQL Server2016 和 Azure SQL Database 的主要示例。 它同时包含OLTP和OLAP数据库。
+  - [In-Memory OLTP Performance Demo v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/in-memory-oltp-demo-v1.0) SQL Server 和 Azure SQL Database 中的内存OLTP技术的性能优势。
+  - [IoT Smart Grid sample v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/iot-smart-grid-v1.0) 如何利用 SQL Server 从 IoT 设备和传感器获取数据，以及如何对这些数据进行分析。
 ~~~sql
 -- SQLServer版本
 SELECT @@VERSION -- Enterprise Edition、Standard Edition、Developer Edition
