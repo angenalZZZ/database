@@ -1,0 +1,29 @@
+参考：https://help.aliyun.com/knowledge_detail/37451.html
+----------------------------------------------------------------------
+cd Server\3.4\bin
+----------------------------------------------------------------------
+
+步骤一：在未开启认证的环境下，登录到数据库 (修改默认端口27017)
+mongo 127.0.0.1:27027
+
+
+步骤二：切换到admin数据库
+use admin
+
+
+步骤三：创建管理员账号（手动输入）
+db.createUser({user:"root",pwd:"123456789",roles:["root"]})
+
+步骤四：验证用户是否创建成功
+db.auth("root","123456789")
+
+步骤五：杀掉进程，重启mongoDB服务
+
+
+步骤六：切换到my数据库（通过Robomongo登陆后）
+db.createUser({user:"root",pwd:"123456789",roles:[]})
+
+----------------------------------------------------------------------
+<数据库连接>
+mongodb://[username:password@]host1[:port1][,host2[:port2],…[,hostN[:portN]]][/[database][?options]]
+
