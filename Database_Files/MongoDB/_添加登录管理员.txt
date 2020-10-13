@@ -1,29 +1,28 @@
-²Î¿¼£ºhttps://help.aliyun.com/knowledge_detail/37451.html
+å‚è€ƒï¼šhttps://help.aliyun.com/knowledge_detail/37451.html
 ----------------------------------------------------------------------
-cd Server\3.4\bin
+cd D:\Program\MongoDB\Server\*.*\bin
 ----------------------------------------------------------------------
 
-²½ÖèÒ»£ºÔÚÎ´¿ªÆôÈÏÖ¤µÄ»·¾³ÏÂ£¬µÇÂ¼µ½Êı¾İ¿â (ĞŞ¸ÄÄ¬ÈÏ¶Ë¿Ú27017)
+æ­¥éª¤ä¸€ï¼šåœ¨æœªå¼€å¯è®¤è¯çš„ç¯å¢ƒä¸‹ï¼Œç™»å½•åˆ°æ•°æ®åº“ (ä¿®æ”¹é»˜è®¤ç«¯å£27017)
 mongo 127.0.0.1:27027
 
-
-²½Öè¶ş£ºÇĞ»»µ½adminÊı¾İ¿â
+æ­¥éª¤äºŒï¼šåˆ‡æ¢åˆ°adminæ•°æ®åº“
 use admin
 
+æ­¥éª¤ä¸‰ï¼šåˆ›å»ºç®¡ç†å‘˜è´¦å·ï¼ˆæ‰‹åŠ¨è¾“å…¥ï¼‰
+db.createUser({user:"root",pwd:"HGJ766GR767FKJU0",roles:["root"]})
 
-²½ÖèÈı£º´´½¨¹ÜÀíÔ±ÕËºÅ£¨ÊÖ¶¯ÊäÈë£©
-db.createUser({user:"root",pwd:"123456789",roles:["root"]})
+æ­¥éª¤å››ï¼šéªŒè¯ç”¨æˆ·æ˜¯å¦åˆ›å»ºæˆåŠŸ
+db.auth("root","HGJ766GR767FKJU0")
 
-²½ÖèËÄ£ºÑéÖ¤ÓÃ»§ÊÇ·ñ´´½¨³É¹¦
-db.auth("root","123456789")
+æ­¥éª¤äº”ï¼šæ€æ‰è¿›ç¨‹ï¼Œé‡å¯MongoDBæœåŠ¡
 
-²½ÖèÎå£ºÉ±µô½ø³Ì£¬ÖØÆômongoDB·şÎñ
-
-
-²½ÖèÁù£ºÇĞ»»µ½myÊı¾İ¿â£¨Í¨¹ıRobomongoµÇÂ½ºó£©
-db.createUser({user:"root",pwd:"123456789",roles:[]})
+æ­¥éª¤å…­ï¼šåˆ‡æ¢åˆ°myæ•°æ®åº“ï¼ˆé€šè¿‡Robomongoç™»é™†ï¼‰
+db.createUser({user:"root",pwd:"HGJ766GR767FKJU0",roles:[]})
 
 ----------------------------------------------------------------------
-<Êı¾İ¿âÁ¬½Ó>
-mongodb://[username:password@]host1[:port1][,host2[:port2],¡­[,hostN[:portN]]][/[database][?options]]
+<æ•°æ®åº“è¿æ¥>
+mongodb://[username:password@]host1[:port1][,host2[:port2],â€¦[,hostN[:portN]]][/[database][?options]]
+mongodb://root:HGJ766GR767FKJU0@127.0.0.1:27017/admin?gssapiServiceName=mongodb
+mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
 
