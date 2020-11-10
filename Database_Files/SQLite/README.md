@@ -32,6 +32,7 @@ select 1 from sqlite_master WHERE type='table' and name='logtest';
 ~~~
 > 创建Table
 ~~~sql
+# Version 3.3+ 支持 CREATE TABLE IF NOT EXISTS [TableName]; DROP TABLE IF EXISTS [TableName]
 CREATE TABLE IF NOT EXISTS [logtest] (
 	[Id] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	[Code] varchar(50) NOT NULL, 
