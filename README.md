@@ -277,6 +277,7 @@ WHERE xp.name in (N'MS_Description')
 
 
 -- --日期时间-- https://www.aliyun.com/jiaocheng/1399735.html
+-- https://docs.microsoft.com/en-us/sql/t-sql/functions/current-timestamp-transact-sql?view=sql-server-2017#examples
 SET DATEFIRST 1; SELECT @@DATEFIRST [星期一为每周第一天];
 SELECT SYSDATETIME(), SYSDATETIMEOFFSET()  -- 时区offset +08:00
 SELECT SYSUTCDATETIME(), CURRENT_TIMESTAMP -- UTC时间, 时间戳timestamp等价于getdate()
