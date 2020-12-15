@@ -52,13 +52,18 @@ CREATE TABLE IF NOT EXISTS [logtest] (
 	[Type] int NOT NULL, 
 	[Message] nvarchar(2000) NOT NULL, 
 	[Account] varchar(36), 
-	[CreateTime] datetime NOT NULL, 
-	[CreateUser] varchar(36)
+	[CreateTime] TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 自动初始化以及自动更新
+	[CreateUser] varchar(36) -- TIMESTAMP DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP -- 不初始化以及只做自动更新
 );
 ~~~
-> 查询Table
+> 查询
 ~~~sql
 select * from logs limit 10 offset 0;
+
+select strftime('%s','now'), strftime('%s','now','localtime'); -- 从1970到现在的秒数
+select strftime('%Y-%m-%d %H:%M:%S','now','localtime'); -- 等价于 -- select datetime('now','localtime');
+select strftime('%Y-%m-%d %H:%M:%S','now'); -- 当前UTC时间,时间戳(秒)
+select strftime('%Y-%m-%d %H:%M:%f','now'); -- 当前UTC时间,时间戳(毫秒)
 ~~~
 
 
