@@ -2,7 +2,7 @@
     简而言之可视为电子化的文件柜——存储电子文件的处所，用户可以对文件中的数据进行新增、截取、更新、删除等操作。
     所谓“数据库”是以一定方式储存在一起、能予多个用户共享、具有尽可能小的冗余度、与应用程序彼此独立的数据集合。
 
- > [`✨Sql查询语句`](#sql查询语句)、[`✨数据库设计`](#数据库设计) [`Mysql`](mysql.md)、[`Sqlite`](sqlite.md)
+ > [`✨Sql查询语句`](#sql查询语句)、[`✨数据库设计`](#数据库设计) [`Mysql规范`](mysql.md)、[`Sqlite`](sqlite.md)
 
 ## 数据库管理系统
     Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
@@ -15,29 +15,29 @@
 
 #### 关系数据库
 
-- MySQL https://www.mysql.com
+- [MySQL](https://www.mysql.com "官网") [downloads](https://dev.mysql.com/downloads/ "下载")
 
   - MySQL Enterprise Edition 提供了可扩展性、安全性、可靠性；降低了开发部署和管理的风险、成本和复杂性。
   - MariaDB（MySQL的代替品）https://github.com/MariaDB/server
   - Percona Server（MySQL的代替品）https://github.com/percona/percona-server
 
-- PostgreSQL 世界上最先进的开源关系数据库 https://www.postgresql.org
+- [Oracle](https://www.oracle.com) 甲骨文公司软件产品
 
-- Oracle 甲骨文公司软件产品 https://www.oracle.com
+- [Microsoft SQL Server](https://www.microsoft.com/zh-cn/sql-server) 微软推出的关系型数据库管理系统
 
-- Microsoft SQL Server 微软推出的关系型数据库管理系统 https://www.microsoft.com/zh-cn/sql-server
+- [PostgreSQL](https://www.postgresql.org) 世界上最先进的开源关系数据库
 
  几乎所有的数据库管理系统都配备了一个开放式数据库连接（ODBC）驱动程序，令各个数据库之间得以互相集成。
 
 #### 非关系型数据库（NoSQL）
 
-- BigTable（Google）分布式数据存储系统，可扩展到PB级数据和上千台服务器 https://cloud.google.com/bigtable
-- MongoDB 基于分布式文件存储的数据库 https://www.mongodb.org.cn
-- CouchDB 下一代Web应用存储系统 http://couchdb.apache.org
+- [BigTable（Google）](https://cloud.google.com/bigtable) 分布式数据存储系统，可扩展到PB级数据和上千台服务器
+- [CouchDB](http://couchdb.apache.org) 下一代Web应用存储系统
+- [MongoDB](https://www.mongodb.org.cn) 基于分布式文件存储的数据库
 
 #### 内存数据库 | 键值（key-value）数据库
 
-- [Redis（Salvatore Sanfilippo）](https://github.com/angenalZZZ/doc/blob/master/redis缓存服务.md)、[中文官网](http://www.redis.cn)
+- [Redis（Salvatore Sanfilippo）](https://github.com/angenalZZZ/doc/blob/master/redis缓存服务.md)、[查询文档](http://www.redis.cn)
 - [Rocksdb（Facebook）](https://github.com/facebook/rocksdb/blob/master/LANGUAGE-BINDINGS.md)
 - [LevelDB（Google）](https://github.com/google/leveldb)
 
