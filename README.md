@@ -15,25 +15,26 @@
 
 #### 关系数据库
 
-- [MySQL](https://www.mysql.com "官网") [downloads](https://dev.mysql.com/downloads/ "下载")
+- [MySQL](https://www.mysql.com "官网")
 
-  - MySQL Enterprise Edition 提供了可扩展性、安全性、可靠性；降低了开发部署和管理的风险、成本和复杂性。
-  - MariaDB（MySQL的代替品）https://github.com/MariaDB/server
-  - Percona Server（MySQL的代替品）https://github.com/percona/percona-server
+  - [MySQL Community Downloads](https://dev.mysql.com/downloads/ "下载")
+  - [MySQL Enterprise Edition](https://www.mysql.com/cn/trials/ "购买") 提供了可扩展性、安全性、可靠性；降低了开发部署和管理的风险、成本和复杂性。
+  - [MariaDB](https://github.com/MariaDB/server)（MySQL的代替品）
+  - [Percona Server](https://github.com/percona/percona-server)（MySQL替代品）
 
-- [Oracle](https://www.oracle.com) 甲骨文公司软件产品
+- [Oracle](https://www.oracle.com "官网") 甲骨文公司软件产品
 
-- [Microsoft SQL Server](https://www.microsoft.com/zh-cn/sql-server) 微软推出的关系型数据库管理系统
+- [Microsoft SQL Server](https://www.microsoft.com/zh-cn/sql-server "官网") 微软推出的关系型数据库管理系统
 
-- [PostgreSQL](https://www.postgresql.org) 世界上最先进的开源关系数据库
+- [PostgreSQL](https://www.postgresql.org "官网") 世界上最先进的开源关系数据库
 
  几乎所有的数据库管理系统都配备了一个开放式数据库连接（ODBC）驱动程序，令各个数据库之间得以互相集成。
 
 #### 非关系型数据库（NoSQL）
 
-- [BigTable（Google）](https://cloud.google.com/bigtable) 分布式数据存储系统，可扩展到PB级数据和上千台服务器
-- [CouchDB](http://couchdb.apache.org) 下一代Web应用存储系统
-- [MongoDB](https://www.mongodb.org.cn) 基于分布式文件存储的数据库
+- [BigTable（Google）](https://cloud.google.com/bigtable "官网") 分布式数据存储系统，可扩展到PB级数据和上千台服务器
+- [CouchDB](http://couchdb.apache.org "官网") 下一代Web应用存储系统
+- [MongoDB](https://www.mongodb.org.cn "官网") 基于分布式文件存储的数据库
 
 #### 内存数据库 | 键值（key-value）数据库
 
