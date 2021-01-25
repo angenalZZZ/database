@@ -2,9 +2,9 @@
     简而言之可视为电子化的文件柜——存储电子文件的处所，用户可以对文件中的数据进行新增、截取、更新、删除等操作。
     所谓“数据库”是以一定方式储存在一起、能予多个用户共享、具有尽可能小的冗余度、与应用程序彼此独立的数据集合。
 
- > [`✨Sql查询语句`](#sql查询语句)、[`✨数据库设计`](#数据库设计) [`Mysql规范`](mysql.md)、[`Sqlite`](sqlite.md)
+ > [`✨Sql查询语句`](#sql查询语句)、[`✨数据库设计`](#数据库设计) [`Mysql设计规范`](mysql.md)、[`Sqlite`](sqlite.md)
 
-## 数据库管理系统 [`My Database Manage Tool`](https://github.com/angenalZZZ/doc-zip/blob/master/Database5Pro.7z)
+## 数据库管理系统 [`Database's Tool`](https://github.com/angenalZZZ/doc-zip/blob/master/Database5Pro.7z "fishcodelib.com")
     Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
     一般具有存储、截取、安全保障、备份等基础功能。数据库管理系统可以依据它所支持的数据库模型来作分类，例如`关系式`、`XML`
     或依据所支持的计算机类型来作分类，例如服务器群集、移动电话； 或依据所用查询语言来作分类，例如`SQL`、`XQuery`
