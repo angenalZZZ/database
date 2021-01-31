@@ -219,20 +219,20 @@ $ mysql -P3306 -uroot -p < init.sql   # 以root身份登录并执行脚本> sour
 # 创建数据库<db>字符集编码为utf8
 > create database <db> default character set utf8 collate utf8_bin;
 # 创建用户并授权
-CREATE USER 'unknown'@'192.168.10.10' IDENTIFIED BY '******'; # 创建用户unknown密码******
 CREATE USER 'unknown'@'localhost' IDENTIFIED BY '******';     # 创建本地用户unknown密码******
+CREATE USER 'unknown'@'192.168.10.10' IDENTIFIED BY '******'; # 创建远程用户unknown密码******
 # 配置远程访问 (@'localhost'本机访问; @'%'所有主机都可连接)
-> CREATE USER 'newuser'@'%' IDENTIFIED BY 'password';
-> select * from user where user='newuser' \G;  # 查询当前用户: SELECT USER();
+> CREATE USER 'newuser'@'%' IDENTIFIED BY '******';  # 创建远程用户newuser密码******
+> select * from user where user='newuser' \G;        # 查询当前用户: SELECT USER();
 > grant select,insert,update,delete,create,drop,index,alter on dbname.* to newuser@192.168.10.10 identified by '******';
-> GRANT ALL PRIVILEGES ON *.* TO root@localhost IDENTIFIED BY '******';    # 默认root授权对所有db本地操作权限(限制root为local访问)
-> GRANT ALL PRIVILEGES ON <db>.* TO 'newuser'@'%' IDENTIFIED BY '******';  # 授权newuser对指定<db>所有操作权限
+> GRANT ALL PRIVILEGES ON *.* TO root@localhost IDENTIFIED BY '******';    # 默认root授权对所有db本地操作权限(限制本地访问)
+> GRANT ALL PRIVILEGES ON <db>.* TO 'newuser'@'%' IDENTIFIED BY '******';  # 授权用户newuser对指定<db>所有的操作权限
 -- GRANT EXECUTE, PROCESS, SELECT, SHOW DATABASES, SHOW VIEW, ALTER, ALTER ROUTINE, CREATE, CREATE ROUTINE, \
-    CREATE TABLESPACE, CREATE TEMPORARY TABLES, CREATE VIEW, DELETE, DROP, EVENT, INDEX, INSERT, REFERENCES, \
-    TRIGGER, UPDATE, CREATE USER, FILE, LOCK TABLES, RELOAD, REPLICATION CLIENT, REPLICATION SLAVE, SHUTDOWN, \
-    SUPER ON <db>.* TO 'unknown'@'%' WITH GRANT OPTION;            # 给用户unknown对指定<db>的操作权限
--- GRANT USAGE ON <db>.* TO 'unknown'@'localhost';
--- GRANT PROXY ON ''@'' TO 'unknown'@'localhost' WITH GRANT OPTION;
+--   CREATE TABLESPACE, CREATE TEMPORARY TABLES, CREATE VIEW, DELETE, DROP, EVENT, INDEX, INSERT, REFERENCES, \
+--   TRIGGER, UPDATE, CREATE USER, FILE, LOCK TABLES, RELOAD, REPLICATION CLIENT, REPLICATION SLAVE, SHUTDOWN, \
+--   SUPER ON <db>.* TO 'unknown'@'%' WITH GRANT OPTION; # 授权用户unknown对指定<db>指定的操作权限
+-- GRANT USAGE ON <db>.* TO 'unknown'@'localhost';       # 限制用户unknown只能本地访问<db>
+-- GRANT PROXY ON ''@'' TO 'unknown'@'localhost' WITH GRANT OPTION; # 代理授权访问
 > SET PASSWORD FOR 'root'@'%' = PASSWORD('******');      # 设置密码为root
 > mysqladmin -u root password 123456                     # 初始化密码
 > mysqladmin -u root -p 123456 password HGJ766GR767FKJU0 # 修改密码
