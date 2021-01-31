@@ -6,7 +6,7 @@
 
 ## 数据库管理系统 [`Database's Tool`](https://github.com/angenalZZZ/doc-zip/blob/master/Database5Pro.7z "fishcodelib.com")
     Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
-    一般具有存储、截取、安全保障、备份等基础功能。数据库管理系统可以依据它所支持的数据库模型来作分类，例如`关系式`、`XML`
+    一般具有存储+截取+安全保障+备份等基础功能。数据库管理系统可以依据它所支持的数据库模型来作分类，例如`关系式`、`XML`
     或依据所支持的计算机类型来作分类，例如服务器群集、移动电话； 或依据所用查询语言来作分类，例如`SQL`、`XQuery`
     或依据性能冲量重点来作分类，例如最大规模、最高运行速度；亦或其他的分类方式。
     不论使用哪种分类方式，一些`DBMS`能够跨类别，例如，同时支持多种查询语言。
@@ -89,7 +89,7 @@
 
 ----
 
-#### SQL查询语句
+#### SQL查询
 
  * `DDL`（data definition language）数据库定义语言
     * 定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
@@ -192,6 +192,8 @@ SELECT COUNT(DECODE(type,'1',1,NULL)) typeCount1, COUNT(DECODE(type,'2',1,NULL))
 FROM products 
 
 ~~~
+
+#### SQL查询语句
 
 > [`MySQL`](https://www.mysql.com) ~ `sql语句`
 ~~~sql
