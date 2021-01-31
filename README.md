@@ -193,12 +193,6 @@ FROM products
 
 ~~~
 
-> [`Oracle`](https://www.oracle.com) ~ `sql语句`
-
-~~~sql
-PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
-~~~
-
 > [`MySQL`](https://www.mysql.com) ~ `sql语句`
 ~~~sql
 # 安装数据库
@@ -514,8 +508,14 @@ exec master..xp_cmdshell 'net use \\192.168.1.114\share "123456789" /USER:192.16
 -- --备份数据库到本机-->请提前创建共享目录share
 backup database testDb to disk = '\\192.168.1.114\share\testDb.bak'
 
-
 ~~~
+
+> [`Oracle`](https://www.oracle.com) ~ `sql语句`
+
+~~~sql
+PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
+~~~
+
 
 ----
 
