@@ -742,3 +742,11 @@ angenals@163.com HGJ766GR	smtp.163.com 465 #? http://help.163.com/09/1224/17/5RA
 
 ~~~
 
+### 远程.LOGIN.ACCOUNTS.
+~~~
+Administrator yzHGJ766GR767FKJU0
+centos yzHGJ766GR767FKJU0
+ubuntu yzHGJ766GR767FKJU0
+
+~~~
+
