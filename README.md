@@ -239,6 +239,7 @@ CREATE USER 'unknown'@'192.168.10.10' IDENTIFIED BY '******'; # 创建远程用�
   - [Wide World Importers sample database v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/wide-world-importers-v1.0) 展现 SQL Server2016 和 Azure SQL Database 的主要示例。 它同时包含OLTP和OLAP数据库。
   - [In-Memory OLTP Performance Demo v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/in-memory-oltp-demo-v1.0) 展现 SQL Server 和 Azure SQL Database 中的内存OLTP技术的性能优势。
   - [IoT Smart Grid sample v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/iot-smart-grid-v1.0) 如何利用 SQL Server 从 IoT 设备和传感器获取数据，以及如何对这些数据进行分析。
+  - [数据安全性/加密/加密数据列](https://docs.microsoft.com/zh-cn/sql/relational-databases/security/encryption/encrypt-a-column-of-data)
 ~~~sql
 -- SQLServer版本
 SELECT @@VERSION -- Enterprise Edition、Standard Edition、Developer Edition
