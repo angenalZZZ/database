@@ -331,6 +331,52 @@ SELECT UPPER(RIGHT(CAST(sys.fn_varbintohexstr(CRYPT_GEN_RANDOM(10)) AS VARCHAR(3
 -- --随机整数--
 SELECT ABS(CONVERT(bigint,CRYPT_GEN_RANDOM(16))), ABS(CONVERT(bigint,CONVERT(varbinary,CRYPT_GEN_RANDOM(16),1)))
 
+-- 通过简单对称加密进行加密
+-- https://docs.microsoft.com/zh-cn/sql/relational-databases/security/encryption/encrypt-a-column-of-data
+USE master;
+-- 哪些数据库已加密
+SELECT top 10 name FROM sys.databases where is_master_key_encrypted_by_server=1;
+-- 查询/密钥信息
+SELECT * FROM sys.symmetric_keys;
+-- 创建/主密钥(主数据库)
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'a7hxJ#KL95234nl0zBe';
+-- 修改/主密钥
+ALTER MASTER KEY REGENERATE WITH ENCRYPTION BY PASSWORD = 'a7hxJ#KL95234nl0zBe';
+-- 备份/主密钥
+OPEN MASTER KEY DECRYPTION BY PASSWORD = 'a7hxJ#KL95234nl0zBe'; -- 备份/还原(前提:打开主密钥)
+BACKUP MASTER KEY TO FILE = 'C:\db\masterkey.bak' ENCRYPTION BY PASSWORD = 'K95234nl';
+-- 还原/主密钥
+RESTORE MASTER KEY FROM FILE = 'c:\db\masterkey.bak' DECRYPTION BY PASSWORD = 'KL95234nl0zBe' ENCRYPTION BY PASSWORD = 'K95234nl';
+-- 创建/加密证书(主数据库)
+CREATE CERTIFICATE Cer_Protection WITH SUBJECT = 'Database Protection';
+-- 备份/证书
+BACKUP CERTIFICATE Cer_Protection TO FILE = 'c:\db\cert.cer' WITH PRIVATE KEY (FILE = 'c:\db\cert.pvk', ENCRYPTION BY PASSWORD = 'K95234nl')
+-- 还原/证书
+RESTORE CERTIFICATE Cer_Protection FROM FILE = 'c:\db\cert.cer' WITH PRIVATE KEY (FILE = 'c:\db\cert.pvk', ENCRYPTION BY PASSWORD = 'K95234nl')
+-- 打开用户数据库
+USE MyDB;
+-- 创建/对称加密密钥(用户数据库)
+CREATE SYMMETRIC KEY Key_Protection WITH ALGORITHM = AES_256 ENCRYPTION BY CERTIFICATE Cer_Protection;
+-- 创建/需加密的表结构
+CREATE TABLE Table_Encrypted (
+	Id char(36) NOT NULL PRIMARY KEY CLUSTERED, 
+	QueryStr nvarchar(30) NOT NULL, 
+	EncryptStr VARBINARY(1024) NOT NULL, 
+	CreateUser char(36) NOT NULL, 
+	CreateTime datetime NOT NULL DEFAULT (getdate()), 
+	LastUpdateUser char(36), 
+	LastUpdateTime datetime NOT NULL DEFAULT (getdate()), 
+	DeleteMark bit NOT NULL DEFAULT ((0)), 
+	DeleteUser varchar(36), 
+	DeleteTime datetime
+) ON PRIMARY;
+-- 新增:加密数据
+OPEN SYMMETRIC KEY Key_Protection DECRYPTION BY CERTIFICATE Cer_Protection; -- 加密/解密(前提:打开对称密钥或主密钥)
+INSERT INTO Table_Encrypted(Id,QueryStr,EncryptStr,CreateUser)
+VALUES(lower(newid()),'关键词',EncryptByKey(Key_GUID('Key_Protection'), N'{"name":"用户名"}'),'730bd098-1e53-49eb-ace1-7174eec76692');
+-- 查询:解密数据
+SELECT Id, EncryptStr, CONVERT(nvarchar,DecryptByKey(EncryptStr)) AS 'Decrypted' FROM Table_Encrypted;  
+
 
 
 -- --游标--
