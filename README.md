@@ -4,7 +4,7 @@
 
  > [`✨Sql查询语句`](#sql查询语句)、[`✨数据库设计`](#数据库设计)[`(Mysql设计规范)`](mysql.md)、[`Sqlite`](sqlite.md)
 
-## 数据库管理系统 [`Database's Tool`](https://github.com/angenalZZZ/doc-zip/blob/master/Database5Pro.7z "fishcodelib.com")
+## 数据库管理系统 [`Database's Tool`](https://github.com/angenalZZZ/doc-zip/blob/master/Database5Pro.7z "fishcodelib.com")、[`Navicat Premium`](https://www.jianshu.com/p/4113cd5ef139)
     Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
     一般具有存储+截取+安全保障+备份等基础功能。数据库管理系统可以依据它所支持的数据库模型来作分类，例如`关系式`、`XML`
     或依据所支持的计算机类型来作分类，例如服务器群集、移动电话； 或依据所用查询语言来作分类，例如`SQL`、`XQuery`
@@ -25,6 +25,7 @@
 - [Oracle](https://www.oracle.com "官网") 甲骨文公司软件产品
 
 - [Microsoft SQL Server](https://www.microsoft.com/zh-cn/sql-server "官网") 微软推出的关系型数据库管理系统
+  - [管理工具`SSMS-Setup-CHS`sql-server-management-studio](https://docs.microsoft.com/zh-cn/sql/ssms/download-sql-server-management-studio-ssms)
 
 - [PostgreSQL](https://www.postgresql.org "官网") 世界上最先进的开源关系数据库
 
