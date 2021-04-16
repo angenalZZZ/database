@@ -622,7 +622,7 @@ BEGIN
   end
   return(@r)
 END
-GO
+
 -- 正则替换函数  SELECT dbo.RegexReplace('John Smith', '([a-z]+)\s([a-z]+)', '$2,$1',1)
 CREATE FUNCTION dbo.RegexReplace
 (
@@ -647,13 +647,13 @@ BEGIN
     EXECUTE sp_OADestroy @objRegex
     RETURN @retstr
 END
-GO
+
 -- 保证正常运行的话，需要将Ole Automation Procedures选项置为1
 EXEC sp_configure 'show advanced options', 1
 RECONFIGURE WITH OVERRIDE
 EXEC sp_configure 'Ole Automation Procedures', 1
 RECONFIGURE WITH OVERRIDE
-GO
+
 -- 拆分字符串: select * from dbo.fn_split('1,2,3,4',',')
 CREATE FUNCTION [dbo].[fn_split] (
 	@string        VARCHAR(MAX),
@@ -674,7 +674,7 @@ RETURN
                ) B
            )
 )
-GO
+
 -- 拆分字符串: select * from dbo.fn_split_top('1,2,3,4',',',2,1)
 CREATE FUNCTION [dbo].[fn_split_top] (
 	@string        VARCHAR(MAX),
@@ -698,7 +698,7 @@ RETURN
            )
      ORDER BY B.id offset @offset ROWS FETCH NEXT @take ROWS ONLY
 )
-GO
+
 -- 拆分字符串: select * from dbo.fn_split2id('1,A;2,B;3,C;4,D',';',',')
 CREATE FUNCTION [dbo].[fn_split2id] (
 	@ids varchar(max),
@@ -720,7 +720,7 @@ begin
 end
 RETURN
 END
-GO
+
 -- 拆分字符串: select * from dbo.fn_split2ids('1,2,3,4','A,B,C,D','Arial,Beel,Core,Do',',')
 CREATE FUNCTION [dbo].[fn_split2ids] (
 	@ids varchar(max),
@@ -751,7 +751,7 @@ RETURNS nvarchar(20) AS BEGIN DECLARE @Result nvarchar(20)
 SELECT @Result = REPLICATE(@PaddingChar, @TotalWidth - LEN(@Source)) + @Source 
 RETURN @Result 
 END
-GO
+
 -- 日期按周统计: SET DATEFIRST 1; select * from dbo.fn_createWeeklyStatisticsTable('2019-01-01','2019-02-15');
 DROP FUNCTION [dbo].[fn_createWeeklyStatisticsTable];
 GO
@@ -806,9 +806,8 @@ INSERT INTO @tbl([Y],[M],[D],[DY],[DY2],[WM],[WY],[StartDate],[EndDate],[State])
 SELECT @Y,@M,@D,@DY,@DY2,@WM,@WY,@TmpDate,@TmpDate2,0
 RETURN
 END
-GO
 
-~~
+~~~
 
 
 > [`Oracle`](https://www.oracle.com) ~ `sql语句`
