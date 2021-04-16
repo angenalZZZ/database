@@ -236,7 +236,7 @@ CREATE USER 'unknown'@'192.168.10.10' IDENTIFIED BY '******'; # 创建远程用�
 > mysqladmin -u root -p shutdown                         # 关闭mysql
 ~~~
 
-> [`SQLServer`](https://www.microsoft.com/zh-cn/sql-server) ~ `sql语句` ~ [`github.com/microsoft/sql-server-samples`](https://github.com/microsoft/sql-server-samples)
+> [`MSSQLServer`](https://www.microsoft.com/zh-cn/sql-server) ~ `sql语句` ~ [`github.com/microsoft/sql-server-samples`](https://github.com/microsoft/sql-server-samples)
   - [Wide World Importers sample database v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/wide-world-importers-v1.0) 展现 SQL Server2016 和 Azure SQL Database 的主要示例。 它同时包含OLTP和OLAP数据库。
   - [In-Memory OLTP Performance Demo v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/in-memory-oltp-demo-v1.0) 展现 SQL Server 和 Azure SQL Database 中的内存OLTP技术的性能优势。
   - [IoT Smart Grid sample v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/iot-smart-grid-v1.0) 如何利用 SQL Server 从 IoT 设备和传感器获取数据，以及如何对这些数据进行分析。
@@ -592,6 +592,224 @@ exec master..xp_cmdshell 'net use \\192.168.1.114\share "123456789" /USER:192.16
 backup database testDb to disk = '\\192.168.1.114\share\testDb.bak'
 
 ~~~
+> `MSSQL Function` 常用函数
+~~~sql
+-- 查询汉字拼音首字母  SELECT dbo.fn_getPY('你好')
+CREATE FUNCTION dbo.fn_getPY(@str nvarchar(4000))
+RETURNS nvarchar(4000)
+AS
+BEGIN
+  declare @l int, @r nvarchar(4000)
+  declare @t table(c nchar(1) collate Chinese_PRC_CI_AS, r nchar(1))
+  insert into @t(c,r)
+    select '吖 ', 'A ' union all select '八 ', 'B ' union all
+    select '嚓 ', 'C ' union all select '咑 ', 'D ' union all
+    select '妸 ', 'E ' union all select '发 ', 'F ' union all
+    select '旮 ', 'G ' union all select '铪 ', 'H ' union all
+    select '丌 ', 'J ' union all select '咔 ', 'K ' union all
+    select '垃 ', 'L ' union all select '嘸 ', 'M ' union all
+    select '拏 ', 'N ' union all select '噢 ', 'O ' union all
+    select '妑 ', 'P ' union all select '七 ', 'Q ' union all
+    select '呥 ', 'R ' union all select '仨 ', 'S ' union all
+    select '他 ', 'T ' union all select '屲 ', 'W ' union all
+    select '夕 ', 'X ' union all select '丫 ', 'Y ' union all
+    select '帀 ', 'Z '
+  select @l = len(@str), @r = ' '
+  while @l > 0
+  begin
+    select top 1 @r = r + @r, @l = @l - 1 from @t a where c <= substring(@str,@l,1) order by c desc
+    if @@rowcount = 0 select @r = substring(@str, @l, 1) + @r, @l = @l-1
+  end
+  return(@r)
+END
+GO
+-- 正则替换函数  SELECT dbo.RegexReplace('John Smith', '([a-z]+)\s([a-z]+)', '$2,$1',1)
+CREATE FUNCTION dbo.RegexReplace
+(
+ @string VARCHAR(MAX), -- 被替换的字符串
+ @pattern VARCHAR(255), -- 替换模板
+ @replaces VARCHAR(255), -- 替换后的字符串
+ @IgnoreCase INT = 0 -- 0区分大小写 1不区分大小写
+)
+RETURNS VARCHAR(8000)
+AS
+BEGIN
+    DECLARE @objRegex INT, @retstr VARCHAR(8000)
+    -- 创建对象
+    EXEC sp_OACreate 'VBScript.RegExp', @objRegex OUT
+    -- 设置属性
+    EXEC sp_OASetProperty @objRegex, 'Pattern', @pattern
+    EXEC sp_OASetProperty @objRegex, 'IgnoreCase', @IgnoreCase
+    EXEC sp_OASetProperty @objRegex, 'Global', 1
+    -- 执行
+    EXEC sp_OAMethod @objRegex, 'Replace', @retstr OUT, @string, @replaces
+    -- 释放
+    EXECUTE sp_OADestroy @objRegex
+    RETURN @retstr
+END
+GO
+-- 保证正常运行的话，需要将Ole Automation Procedures选项置为1
+EXEC sp_configure 'show advanced options', 1
+RECONFIGURE WITH OVERRIDE
+EXEC sp_configure 'Ole Automation Procedures', 1
+RECONFIGURE WITH OVERRIDE
+GO
+-- 拆分字符串: select * from dbo.fn_split('1,2,3,4',',')
+CREATE FUNCTION [dbo].[fn_split] (
+	@string        VARCHAR(MAX),
+	@separator     VARCHAR(10)
+)
+RETURNS TABLE
+AS
+RETURN 
+(
+    SELECT B.id
+    FROM   (
+               (
+                   SELECT [value] = CONVERT(XML, '<v>' + REPLACE(@string, @separator, '</v><v>') + '</v>')
+               ) A 
+               OUTER APPLY
+               (
+                   SELECT id = N.v.value('.', 'varchar(100)') FROM   A.[value].nodes('/v') N(v)
+               ) B
+           )
+)
+GO
+-- 拆分字符串: select * from dbo.fn_split_top('1,2,3,4',',',2,1)
+CREATE FUNCTION [dbo].[fn_split_top] (
+	@string        VARCHAR(MAX),
+	@separator     VARCHAR(10),
+	@offset        int,
+	@take          int = 1
+)
+RETURNS TABLE
+AS
+RETURN 
+(
+    SELECT B.id
+    FROM   (
+               (
+                   SELECT [value] = CONVERT(XML, '<v>' + REPLACE(@string, @separator, '</v><v>') + '</v>')
+               ) A 
+               OUTER APPLY
+               (
+                   SELECT id = N.v.value('.', 'varchar(100)') FROM   A.[value].nodes('/v') N(v)
+               ) B
+           )
+     ORDER BY B.id offset @offset ROWS FETCH NEXT @take ROWS ONLY
+)
+GO
+-- 拆分字符串: select * from dbo.fn_split2id('1,A;2,B;3,C;4,D',';',',')
+CREATE FUNCTION [dbo].[fn_split2id] (
+	@ids varchar(max),
+	@spl char(1)=';',@spr char(1)=','
+)
+RETURNS @tbl TABLE (i varchar(100),d varchar(100))
+AS
+BEGIN
+declare @i int
+declare @id varchar(100)
+set @ids=@ids+@spl
+set @i=charindex(@spl,@ids)
+while @i<>0
+begin
+	set @id=substring(@ids,1,@i-1)
+	IF @id<>'' INSERT INTO @tbl(i,d) VALUES(substring(@id,1,charindex(@spr,@id)-1),substring(@id,charindex(@spr,@id)+1,len(@id)))
+	set @ids=substring(@ids,@i+1,(len(@ids)-@i))
+	set @i=charindex(@spl,@ids)
+end
+RETURN
+END
+GO
+-- 拆分字符串: select * from dbo.fn_split2ids('1,2,3,4','A,B,C,D','Arial,Beel,Core,Do',',')
+CREATE FUNCTION [dbo].[fn_split2ids] (
+	@ids varchar(max),
+	@dds varchar(max),
+	@sds varchar(max),
+	@spl char(1)=','
+)
+RETURNS @tbl TABLE (i varchar(100),d varchar(100),s varchar(100))
+AS
+BEGIN
+declare @i int,@d int,@s int
+declare @id varchar(100),@dd varchar(100),@sd varchar(100)
+set @ids=@ids+@spl;set @dds=@dds+@spl;set @sds=@sds+@spl
+set @i=charindex(@spl,@ids);set @d=charindex(@spl,@dds);set @s=charindex(@spl,@sds)
+while @i<>0 and @d<>0 and @s<>0
+begin
+	set @id=substring(@ids,1,@i-1);set @dd=substring(@dds,1,@d-1);set @sd=substring(@sds,1,@s-1)
+	IF @id<>'' and @dd<>'' and @sd<>'' INSERT INTO @tbl(i,d,s) VALUES(@id,@dd,@sd)
+	set @ids=substring(@ids,@i+1,(len(@ids)-@i));set @dds=substring(@dds,@d+1,(len(@dds)-@d));set @sds=substring(@sds,@s+1,(len(@sds)-@s))
+	set @i=charindex(@spl,@ids);set @d=charindex(@spl,@dds);set @s=charindex(@spl,@sds)
+end
+RETURN
+END
+GO
+-- 日期格式: select dbo.datepartf(datepart(year,getdate()),'',4)+'-'+dbo.datepartf(datepart(month,getdate()),'0',2)+'-'+dbo.datepartf(datepart(day,getdate()),'0',2)
+CREATE FUNCTION [dbo].[datepartf] (@Source nvarchar(20),@PaddingChar nchar(1),@TotalWidth tinyint) 
+RETURNS nvarchar(20) AS BEGIN DECLARE @Result nvarchar(20) 
+SELECT @Result = REPLICATE(@PaddingChar, @TotalWidth - LEN(@Source)) + @Source 
+RETURN @Result 
+END
+GO
+-- 日期按周统计: SET DATEFIRST 1; select * from dbo.fn_createWeeklyStatisticsTable('2019-01-01','2019-02-15');
+DROP FUNCTION [dbo].[fn_createWeeklyStatisticsTable];
+GO
+CREATE FUNCTION [dbo].[fn_createWeeklyStatisticsTable] (
+	@StartDate CHAR(10), -- 开始时间
+	@EndDate CHAR(10) -- 结束时间
+)
+RETURNS @tbl TABLE ([Id] int NOT NULL IDENTITY(1,1) PRIMARY KEY CLUSTERED, [Y] int NOT NULL DEFAULT ((0)), [M] int NOT NULL DEFAULT ((0)), [D] int NOT NULL DEFAULT ((0)), [DY] int NOT NULL DEFAULT ((0)), [DY2] int NOT NULL DEFAULT ((0)), [WM] int NOT NULL DEFAULT ((0)), [WY] int NOT NULL DEFAULT ((0)), [StartDate] char(10) NOT NULL, [EndDate] char(10) NOT NULL, [State] int NOT NULL DEFAULT ((0)))
+AS
+BEGIN
+--SET DATEFIRST 1 --设置每周的起始天为周一
+DECLARE @Y INT=0, @M INT=0, @M2 INT=0, @D INT=0, @D2 INT=0, @DY INT=0, @DY2 INT=0, @WM INT=0, @WM2 INT=0, @WY INT=0, @WY2 INT=0, @tmpM INT=0, @tmpWY INT=0
+DECLARE @OneDate datetime = @StartDate
+DECLARE @EndWhile datetime = @EndDate
+DECLARE @TmpDate CHAR(10) = @StartDate
+DECLARE @TmpDate2 CHAR(10) = @StartDate
+SET @M=datepart(month,@OneDate)
+SET @D=datepart(day,@OneDate)
+SET @DY=datepart(dayofyear,@OneDate)
+SET @WM=datediff(week,dateadd(week,datediff(week,0,dateadd(month,datediff(month,0,@OneDate),0)),0),@OneDate-1)+1
+SET @WY=datepart(week,@OneDate)
+WHILE (@OneDate <= @EndWhile)
+BEGIN
+SET @TmpDate2=CONVERT(CHAR(10),@OneDate,20)
+SET @Y=datepart(year,@OneDate) -- Year
+SET @M2=datepart(month,@OneDate) -- Month
+SET @D2=datepart(day,@OneDate) -- DayOfMonth
+SET @DY2=datepart(dayofyear,@OneDate) -- DayOfYear
+SET @WM2=datediff(week,dateadd(week,datediff(week,0,dateadd(month,datediff(month,0,@OneDate),0)),0),@OneDate-1)+1 -- WeekOfMonth
+IF @WM2=0 SET @M2=@M2-1; IF @M2=0 SET @M2=1;
+IF @D>29 AND @WM=5 AND @DY2-@DY<3 BEGIN SET @tmpM=@M2; SET @M=@M+1; SET @WM=1; SET @D=1; END -- Month Repair
+SET @WY2=datepart(week,@OneDate) -- WeekOfYear
+IF (@tmpM < @M2 OR @WY2 > @tmpWY)
+BEGIN
+SET @tmpM=@M2
+SET @tmpWY=@WY2
+IF (@DY <> @DY2)
+BEGIN
+INSERT INTO @tbl([Y],[M],[D],[DY],[DY2],[WM],[WY],[StartDate],[EndDate],[State])
+SELECT @Y,@M,@D,@DY,@DY2,@WM,@WY,@TmpDate,@TmpDate2,0
+END
+SET @M=@M2
+SET @D=@D2
+SET @DY=@DY2
+SET @WM=@WM2
+SET @WY=@WY2
+SET @TmpDate=@TmpDate2
+END
+SET @OneDate=DATEADD(day,1,@OneDate)
+END
+INSERT INTO @tbl([Y],[M],[D],[DY],[DY2],[WM],[WY],[StartDate],[EndDate],[State])
+SELECT @Y,@M,@D,@DY,@DY2,@WM,@WY,@TmpDate,@TmpDate2,0
+RETURN
+END
+GO
+
+~~
+
 
 > [`Oracle`](https://www.oracle.com) ~ `sql语句`
 
