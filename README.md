@@ -572,24 +572,26 @@ USE [master]
 ALTER DATABASE AFMS SET RECOVERY FULL WITH NO_WAIT
 ALTER DATABASE AFMS SET RECOVERY FULL
 
--- 备份数据库日志
-use [dbName]
-declare @bakfile nvarchar(200)
-set @bakfile='d:\database_bak\log_bak_'+convert(nvarchar(8),getdate(),112)+'.log'
-BACKUP LOG dbName TO DISK = @bakfile WITH RETAINDAYS = 1, COMPRESSION
-DBCC SHRINKFILE (N'DBNAME_log', 1, TRUNCATEONLY)
-
-
 
 -- --备份数据库SQL
 BACKUP DATABASE [dbname] TO DISK=N'/var/opt/mssql/data/dbname.bak' WITH NOFORMAT, INIT, 
  NAME=N'dbname-Full Database Backup', NOSKIP, REWIND, NOUNLOAD, STATS=10, CHECKSUM, CONTINUE_AFTER_ERROR
+ 
 -- --备份数据库SQL
 USE [master]
-BACKUP LOG [dbname] TO  DISK = N'C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\Backup\dbname_LogBackup_2021-04-27_08-35-27.bak' 
-	WITH NOFORMAT, NOINIT,  NAME = N'dbname_LogBackup_2021-04-27_08-35-27', NOSKIP, NOREWIND, NOUNLOAD,  NORECOVERY ,  STATS = 5
-RESTORE DATABASE [dbname] FROM  DISK = N'C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\Backup\dbname.bak' 
-	WITH  FILE = 1,  MOVE N'dbname_log' TO N'C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\Backup\dbname_log.ldf',  NOUNLOAD,  STATS = 5
+
+-- 备份数据库日志
+use [dbName]
+declare @bakfile nvarchar(200)
+set @bakfile='d:\database_bak\dbName_log_'+convert(nvarchar(8),getdate(),112)+'.bak'
+DBCC SHRINKFILE (N'DBNAME_log', 1, TRUNCATEONLY);
+BACKUP LOG dbName TO DISK = @bakfile WITH RETAINDAYS = 1, COMPRESSION;
+BACKUP LOG dbName TO DISK = @bakfile WITH NOFORMAT, NOINIT, 
+	NAME = N'dbname_log', NOSKIP, NOREWIND, NOUNLOAD, NORECOVERY, STATS=5;
+
+-- 恢复数据库
+RESTORE DATABASE [dbname] FROM DISK = N'd:\database_bak\dbName.bak' WITH FILE=1,
+	MOVE N'dbname_log' TO N'C:\Program Files\*\log\dbname_log.ldf', NOUNLOAD, STATS=5;
 
 -- --备份局域网内的数据库-->首先要映射文件访问系统>解决权限问题:关闭防火器(专用网络)
 -- -- exec master..xp_cmdshell 'net use \\IP地址\共享目录 "密码" /USER:计算机名\用户名'
