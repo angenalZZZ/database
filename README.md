@@ -2,7 +2,7 @@
     简而言之可视为电子化的文件柜——存储电子文件的处所，用户可以对文件中的数据进行新增、截取、更新、删除等操作。
     所谓“数据库”是以一定方式储存在一起、能予多个用户共享、具有尽可能小的冗余度、与应用程序彼此独立的数据集合。
 
- > [`✨Sql查询语句`](#sql查询语句)、[`✨数据库设计`](#数据库设计)[`(Mysql设计规范)`](mysql.md)、[`Sqlite`](sqlite.md)
+ > [`✨Sql查询语句`](#sql查询语句)、[`✨数据库设计`](#数据库设计)[`(Mysql设计规范)`](mysql.md)、[`Sqlite`](sqlite.md)、[`数据库文档生成`](#数据库文档生成)
 
 ## 数据库管理系统 [`Database's Tool`](https://github.com/angenalZZZ/doc-zip/blob/master/Database5Pro.7z "fishcodelib.com")、[`Navicat Premium`](https://www.jianshu.com/p/4113cd5ef139)
     Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
@@ -1036,6 +1036,14 @@ PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 ----
 
 
+### 数据库文档生成
+
+#### 工具
+* [`Sybase PowerDesigner 16`桌面软件](https://shareappscrack.com/sap-powerdesigner/)
+* [`tbls`命令行](https://github.com/k1LoW/tbls)输出`Markdown`、`Markdown`、`Word.DOT`、`Excel`、`Plant.UML`、`Image`、`JSON`、`YAML`
+
+
+----
 
 ### 数据库.LOGIN.ACCOUNTS.
 ~~~
