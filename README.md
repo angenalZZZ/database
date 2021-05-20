@@ -36,7 +36,7 @@
 - [BigTable（Google）](https://cloud.google.com/bigtable "官网") 分布式数据存储系统，可扩展到PB级数据和上千台服务器
 - [CouchDB](http://couchdb.apache.org "官网") 下一代Web应用存储系统
 - [MongoDB](https://www.mongodb.org.cn "官网") 基于分布式文件存储的数据库
-- [RavenDB](https://ravendb.net "官网") 一款快速、可靠的开源NoSQL数据库，ACID文档数据库(支持事务) [`企业破解版`](https://www.board4all.biz/search/167040/?q=RavenDB&o=date)
+- [RavenDB](https://ravendb.net "官网") 一款快速、可靠的开源NoSQL数据库，ACID文档数据库(支持事务) [搜索`企业破解版`](https://www.board4all.biz/search/167040/?q=RavenDB&o=date)[`下载`](https://mega.nz/file/jV5kVTqS#xCLHtU7yLNfwKGLLIFKfzXb6aBFdk0FIiiYbv_67-9A)
 
 #### 内存数据库 | 键值（key-value）数据库
 
