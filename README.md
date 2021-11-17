@@ -235,6 +235,33 @@ CREATE USER 'unknown'@'192.168.10.10' IDENTIFIED BY '******'; # 创建远程用�
 > mysqladmin -u root password 123456                     # 初始化密码
 > mysqladmin -u root -p 123456 password HGJ766GR767FKJU0 # 修改密码
 > mysqladmin -u root -p shutdown                         # 关闭mysql
+
+# 存储过程 CALL sp_update(); 
+CREATE PROCEDURE sp_update()
+BEGIN
+	-- 申明变量
+	DECLARE FLAG INT DEFAULT 0;
+	DECLARE N1 VARCHAR(64);
+	DECLARE N2 VARCHAR(64);
+	-- 申明游标和查询状态
+	DECLARE C1 CURSOR FOR SELECT Name1,Name2 FROM abpusers;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET FLAG=1;
+	-- 打开游标
+	OPEN C1;
+	-- 循环开始
+	label1: LOOP
+	-- 获取查询结果
+	FETCH C1 INTO N1,N2;
+	-- 根据查询状态退出循环
+	IF FLAG=1 THEN
+		LEAVE label1;
+	END IF;
+	-- 循环结束
+	END LOOP label1;
+	-- 关闭游标
+	CLOSE C1;
+END
+
 ~~~
 
 > [`MSSQLServer`](https://www.microsoft.com/zh-cn/sql-server) ~ `sql语句` ~ [`github.com/microsoft/sql-server-samples`](https://github.com/microsoft/sql-server-samples)
