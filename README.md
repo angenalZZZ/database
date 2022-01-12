@@ -17,7 +17,7 @@
 
 - [MySQL](https://www.mysql.com "官网")
 
-  - [MySQL Community Downloads](https://dev.mysql.com/downloads/) [下载](http://mirrors.sohu.com/mysql/MySQL-8.0/ "镜像下载地址")
+  - [MySQL Community Downloads](https://dev.mysql.com/downloads/windows/installer/8.0.html)
   - [MySQL Enterprise Edition](https://www.mysql.com/cn/trials/ "购买") 提供了可扩展性、安全性、可靠性；降低了开发部署和管理的风险、成本和复杂性。
   - [MariaDB](https://github.com/MariaDB/server)（MySQL的代替品）
   - [Percona Server](https://github.com/percona/percona-server)（MySQL替代品）
