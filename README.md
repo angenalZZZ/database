@@ -97,9 +97,9 @@
     * 定义表的结构，数据类型，表之间的链接和约束，包括（CREATE、ALTER、DROP等）
  * `DCL`（Data Control Language）数据库控制语言
     * 设置数据库用户或角色权限的语句，包括（grant,deny,revoke等）
- * `DML`（data manipulation language）数据操纵语言 [`✨索引规约`](#索引规约)
+ * `DML`（data manipulation language）数据操纵语言
     * 对数据库的数据进行一些操作，包括（SELECT、UPDATE、INSERT、DELETE等）
- * `SQL优化` & `IO优化(Network&Disk)`  [`✨SQL规约`](#SQL规约)
+ * `SQL优化` & `IO优化(Network&Disk)`  [`✨SQL规约`](#二sql规约) [`✨索引规约`](#三索引规约)
 	* 用索引index提高查询效率，替换`NULL`字段为`NOT NULL`并设置默认值 
 	* 避免在index索引列上使用`函数`、`IS NULL`、`OR`等 导致全表扫描 
 	* 避免在where中使用`OR`，应该将`OR`使用`UNION`进行改写 
