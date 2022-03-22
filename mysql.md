@@ -1,4 +1,4 @@
-# Mysql数据库
+# Mysql数据库 [规范](#mysql规范)
 
 ## Mysql安装
 #### Install Linux Server
