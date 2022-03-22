@@ -1,6 +1,6 @@
 # Mysql数据库
 
-## 安装
+## Mysql安装
 #### Install Linux Server
 ~~~bash
 # 安装数据库 Mysql 8.0 参考 https://dev.mysql.com/doc/refman/8.0/en/linux-installation-yum-repo.html
@@ -68,7 +68,7 @@ mysqld --remove mysql
 ~~~
 
 
-# Mysql规范
+## Mysql规范
 
 #### 一、数据库命令规范 
 
