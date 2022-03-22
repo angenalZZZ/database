@@ -1,5 +1,74 @@
-# Mysql数据库规范
+# Mysql数据库
 
+## 安装
+#### Install Linux Server
+~~~bash
+# 安装数据库 Mysql 8.0 参考 https://dev.mysql.com/doc/refman/8.0/en/linux-installation-yum-repo.html
+cd /tmp # 需提前安装依赖 # yum install -y epel-release glibc glibc.i686 gcc-c++ wget net-tools
+# sudo wget -O /etc/yum.repos.d/ http://repo.mysql.com/mysql-community-release-el7-7.noarch.rpm # 旧版本 mysql7
+wget http://repo.mysql.com/mysql80-community-release-el8-1.noarch.rpm # 新版本 mysql80 (推荐)
+rpm -ivh mysql80-community-release-el8-1.noarch.rpm  # 导入repo
+# 安装 MySQL
+yum install mysql-community-server
+# 配置 https://dev.mysql.com/doc/refman/8.0/en/server-configuration.html
+# 启动 MySQLd (如果WSL失败时,如下 > D-Bus connection Operation not permitted)
+> systemctl start mysqld  # 启动失败时,参考如下
+mv /usr/bin/systemctl /usr/bin/systemctl.old
+wget -O /usr/bin/systemctl https://github.com/gdraheim/docker-systemctl-replacement/blob/master/files/docker/systemctl.py
+chmod +x /usr/bin/systemctl
+# 重置root密码
+cat /var/log/mysqld.log | grep temporary # 获取首次安装启动后"临时生成的root密码"
+mysqladmin -u root -p password
+Enter password: # 输入"临时生成的root密码"
+New password: # 输入"新的密码"
+# 登录 MySQL
+mysql -u root -p mysql
+mysql> show databases;
+# 导入时区
+mysql> select * from mysql.time_zone;
+mysql> exit
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
+mysql> select count(*) from mysql.time_zone;
+~~~
+#### Install Windows Server
+~~~bash
+# 下载默认安装包(双击安装) 推荐
+start https://dev.mysql.com/downloads/windows/installer/8.0.html
+# 下载其它安装包(解压安装)
+# https://cdn.mysql.com//archives/mysql-8.0/mysql-8.0.20-winx64.zip
+# 解压到  E:\Program Files\mysql-8.0.20-winx64\
+# 新增环境变量Path  E:\Program Files\mysql-8.0.20-winx64\bin
+# 编辑配置文件  E:\Program Files\mysql-8.0.20-winx64\my.ini
+basedir=E:\Program Files\mysql-8.0.20-winx64
+datadir=E:\Program Files\mysql-8.0.20-winx64\data
+# 初始化 mysql
+cd E:\Program Files\mysql-8.0.20-winx64\bin
+mysqld --initialize --console  # 以管理员身份运行, 记录 temporary password
+# 启动 mysql
+net start mysql
+# 输入"临时生成的root密码"
+# mysqladmin -u root -p password
+mysql -u root -p # Input temporary password
+mysql> ALTER USER root@localhost IDENTIFIED BY '123456'; # Update password
+# 登录 MySQL
+mysql -u root -p mysql
+mysql> show databases;
+mysql> use mysql;
+mysql> update user set password =password('密码') where user='root';
+mysql> GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'root'; #授权外网通过root登录
+mysql> show variables like '%char%';
+mysql> set names utf8; # set names utf8mb4 # 设置编码
+# 导入时区
+mysql> select * from mysql.time_zone;
+mysql> exit
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
+mysql> select count(*) from mysql.time_zone;
+# 删除 mysql
+mysqld --remove mysql
+~~~
+
+
+# Mysql规范
 
 #### 一、数据库命令规范 
 
