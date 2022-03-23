@@ -1,7 +1,7 @@
 # Mysql数据库 [规范](#mysql规范)
 
 ## Mysql安装
-#### Install Linux Server
+#### [Install Linux Server](https://dev.mysql.com/doc/refman/8.0/en/linux-installation.html)
 ~~~bash
 # 安装数据库 Mysql 8.0 参考 https://dev.mysql.com/doc/refman/8.0/en/linux-installation-yum-repo.html
 cd /tmp # 需提前安装依赖 # yum install -y epel-release glibc glibc.i686 gcc-c++ wget net-tools
@@ -30,7 +30,7 @@ mysql> exit
 mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
 mysql> select count(*) from mysql.time_zone;
 ~~~
-#### Install Windows Server
+#### [Install Windows Server](https://dev.mysql.com/doc/refman/8.0/en/windows-installation.html)
 ~~~bash
 # 下载默认安装包(双击安装) 推荐
 start https://dev.mysql.com/downloads/windows/installer/8.0.html
@@ -47,18 +47,19 @@ basedir=E:/Program Files/mysql-8.0.20
 datadir=E:/Program Files/mysql-8.0.20/data
 # 初始化 mysql
 cd E:\Program Files\mysql-8.0.20\bin  # 以管理员身份运行
-mysqld --initialize-insecure   # Initializing the Data Directory
+mysqld --initialize            # Initializing the Data Directory
+mysqld --initialize-insecure
 mysqld --console               # Starting the Server for the First Time
-mysqld --initialize --console  # 初始化数据目录并启动服务；记录 temporary password
-# 启动 mysql
+mysqld --initialize --console  # 初始化数据目录并启动mysqld；记录 temporary password
+# 启动 mysql 服务
 mysqld --console               # 启动 start with --console display some useful information.
-mysqladmin -u root shutdown    # 停止 mysql process above, no windows service.
+mysqladmin -u root shutdown    # 停止 mysqld process above, no windows-service.
 mysqld --install MySQL         # 安装 Windows-Service (after shutdown) 默认服务名为 MySQL
 mysqld --install --local-service # 安装 Windows-Service name is MySQL. &有限系统权限的Windows帐户
 mysqld --remove                # 卸载 Windows-Service: NET STOP MySQL && SC DELETE MySQL
 net start MySQL                # 启动 Windows-Service
 # 输入"临时生成的root密码"
-# mysqladmin -u root -p password
+# mysqladmin -u root -p password # 重置密码
 mysql -u root -p # Input temporary password
 mysql> ALTER USER root@localhost IDENTIFIED BY '123456'; # Update password
 # 登录 MySQL
