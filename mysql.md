@@ -86,6 +86,7 @@ mysql> show variables like '%char%';
 mysql> set names utf8mb4; # set names utf8 # 设置编码utf8mb4才是真正的utf-8
 mysql> create database <db> default character set utf8mb4 collate utf8mb4_bin; # 创建数据库<db>字符集编码为utf8
 mysql> exit
+mysql -P 3306 -u root -p <db> < init.sql   # 以root身份登录并在<db>中执行脚本> source init.sql
 ~~~
 
 
