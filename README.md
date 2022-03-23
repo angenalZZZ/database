@@ -199,7 +199,7 @@ FROM products
 
 > [`MySQL`](https://www.mysql.com) ~ `sql语句`
 ~~~sql
-# 安装数据库
+# 安装数据库 mysql5.7
 $ sudo apt-get update
 $ sudo apt-get install mysql-server  # 默认版本 <CentOS7> sudo yum install mariadb mariadb-server
 $ sudo mysql_secure_installation     # 安装配置
@@ -234,7 +234,7 @@ CREATE USER 'unknown'@'192.168.10.10' IDENTIFIED BY '******'; # 创建远程用�
 > SET PASSWORD FOR 'root'@'%' = PASSWORD('******');      # 设置密码为root
 > mysqladmin -u root password 123456                     # 初始化密码
 > mysqladmin -u root -p 123456 password HGJ766GR767FKJU0 # 修改密码
-> mysqladmin -u root -p shutdown                         # 关闭mysql
+> mysqladmin -u root shutdown                            # 关闭mysql
 
 # 存储过程 CALL sp_update(); 
 CREATE PROCEDURE sp_update()
