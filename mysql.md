@@ -59,24 +59,25 @@ mysqld --install --local-service # 安装 Windows-Service name is MySQL. &有限
 mysqld --remove                # 卸载 Windows-Service: NET STOP MySQL && SC DELETE MySQL
 net start MySQL                # 启动 Windows-Service
 # 输入"临时生成的root密码"
-# mysqladmin -u root -p password # 重置密码
-mysql -u root -p # Input temporary password
-mysql> ALTER USER root@localhost IDENTIFIED BY '123456'; # Update password
+# mysqladmin -u root -p password  # 重置密码
+mysql -u root -p [temporary-password] # 从初始化数据那里获取 temporary password
+#mysql> ALTER USER root@localhost IDENTIFIED BY '密码'; # Update password for mysql5.7
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '密码' PASSWORD EXPIRE NEVER; # 更改加密方式'不过期'
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '密码'; # 更新密码
+mysql> FLUSH PRIVILEGES; # 刷新权限(生效)
 # 登录 MySQL
-mysql -u root -p mysql
+mysql -h localhost -P 3306 -u root -p mysql
 mysql> show databases;
 mysql> use mysql;
-mysql> update user set password =password('密码') where user='root';
-mysql> GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'root'; #授权外网通过root登录
+#mysql> update user set password =password('密码') where user='root';
+#mysql> GRANT ALL ON *.* TO 'root'@'%';   # 创建远程连接%
+mysql> GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'root'; # 授权外网通过root登录
+mysql> ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '密码'; #修改远程连接加密方式为mysql_native_password
+mysql> FLUSH PRIVILEGES; # 刷新权限(生效)
+mysql> select Host,User,plugin from mysql.user;
 mysql> show variables like '%char%';
-mysql> set names utf8; # set names utf8mb4 # 设置编码
-# 导入时区
-mysql> select * from mysql.time_zone;
+mysql> set names utf8mb4; # set names utf8 # 设置编码utf8mb4才是真正的utf-8
 mysql> exit
-mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
-mysql> select count(*) from mysql.time_zone;
-# 删除 mysql
-mysqld --remove mysql
 ~~~
 
 
