@@ -70,8 +70,8 @@ mysql -h localhost -P 3306 -u root -p mysql
 mysql> show databases;
 mysql> use mysql;
 #mysql> update user set password =password('密码') where user='root'; # only for mysql5.7
-#mysql> GRANT ALL ON *.* TO 'root'@'%';  # 创建远程连接%(MySQL服务的IP)
-mysql> GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'root'; # 授权外网通过root登录
+#mysql> GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'root'; # 授权外网通过root登录mysql5.7
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';  # 创建远程连接%(MySQL服务的IP)
 mysql> ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '密码'; #修改远程连接加密方式为mysql_native_password
 mysql> FLUSH PRIVILEGES; # 刷新权限(生效)
 mysql> select Host,User,plugin from mysql.user;
