@@ -35,7 +35,7 @@ mysql> select count(*) from mysql.time_zone;
 # 下载默认安装包(双击安装) 推荐
 start https://dev.mysql.com/downloads/windows/installer/8.0.html
 start https://cdn.mysql.com/archives/mysql-installer/mysql-installer-community-8.0.20.0.msi
-# 下载其它安装包(解压安装)
+# 下载其它安装包(解压安装) 如下步骤
 # https://cdn.mysql.com/archives/mysql-8.0/mysql-8.0.20-winx64.zip
 # 解压到>  E:\Program Files\mysql-8.0.20
 # 新增环境变量PATH+=   E:\Program Files\mysql-8.0.20\bin
@@ -48,11 +48,11 @@ datadir=E:/Program Files/mysql-8.0.20/data
 # 初始化 mysql
 cd E:\Program Files\mysql-8.0.20\bin  # 以管理员身份运行
 mysqld --initialize            # Initializing the Data Directory
-mysqld --initialize-insecure
+#mysqld --initialize-insecure
 mysqld --console               # Starting the Server for the First Time
 mysqld --initialize --console  # 初始化数据目录并启动mysqld；记录 temporary password
 # 启动 mysql 服务
-mysqld --console               # 启动 start with --console display some useful information.
+#mysqld --console              # 启动 mysqld with --console display some useful information.
 mysqladmin -u root shutdown    # 停止 mysqld process above, no windows-service.
 mysqld --install MySQL         # 安装 Windows-Service (after shutdown) 默认服务名为 MySQL
 mysqld --install --local-service # 安装 Windows-Service name is MySQL. &有限系统权限的Windows帐户
