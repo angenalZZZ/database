@@ -59,11 +59,15 @@ mysqld --install --local-service # 安装 Windows-Service name is MySQL. &有限
 mysqld --remove                # 卸载 Windows-Service: NET STOP MySQL && SC DELETE MySQL
 net start MySQL                # 启动 Windows-Service
 # 输入"临时生成的root密码"
-# mysqladmin -u root -p password  # 重置密码(使用客户端工具mysqladmin)
-mysql -u root -p [temporary-password] # 从初始化数据那里获取 temporary password for 'root'@'localhost'
+# mysqladmin -u root -p password  # 重置密码(使用客户端工具mysqladmin) for 'root'@'localhost'
+mysql -u root -p mysql > [temporary-password] # 从初始化那里获取 temporary password
 #mysql> ALTER USER root@localhost IDENTIFIED BY '密码'; # Update password only for mysql5.7
-mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '密码' PASSWORD EXPIRE NEVER; # 更改加密方式'不过期'
-mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '密码'; # 更新密码方式为mysql_native_password
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '密码' PASSWORD EXPIRE NEVER; # 更改加密方式为'永不过期'
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '密码'; # 更新密码+插件为mysql_native_password
+# 新建用户 `admin`@`%`
+mysql> CREATE USER `admin`@`%` IDENTIFIED WITH caching_sha2_password BY '密码' PASSWORD EXPIRE NEVER; # 密码+插件为caching_sha2_password
+mysql> GRANT Alter, Alter Routine, Create, Create Routine, Create Temporary Tables, Create View, Delete, Drop, Event, Execute,
+ File, Index, Insert, Lock Tables, Select, Show Databases, Show View, Trigger, Update ON *.* TO `admin`@`%`;
 mysql> FLUSH PRIVILEGES; # 刷新权限(生效)
 # 登录 MySQL
 mysql -h localhost -P 3306 -u root -p mysql
