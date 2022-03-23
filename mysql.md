@@ -5,7 +5,7 @@
 ~~~bash
 # 安装数据库 Mysql 8.0 参考 https://dev.mysql.com/doc/refman/8.0/en/linux-installation-yum-repo.html
 cd /tmp # 需提前安装依赖 # yum install -y epel-release glibc glibc.i686 gcc-c++ wget net-tools
-# sudo wget -O /etc/yum.repos.d/ http://repo.mysql.com/mysql-community-release-el7-7.noarch.rpm # 旧版本 mysql7
+# sudo wget -O /etc/yum.repos.d/ http://repo.mysql.com/mysql-community-release-el5-7.noarch.rpm # 旧版本 mysql5.7
 wget http://repo.mysql.com/mysql80-community-release-el8-1.noarch.rpm # 新版本 mysql80 (推荐)
 rpm -ivh mysql80-community-release-el8-1.noarch.rpm  # 导入repo
 # 安装 MySQL
@@ -34,18 +34,29 @@ mysql> select count(*) from mysql.time_zone;
 ~~~bash
 # 下载默认安装包(双击安装) 推荐
 start https://dev.mysql.com/downloads/windows/installer/8.0.html
+start https://cdn.mysql.com/archives/mysql-installer/mysql-installer-community-8.0.20.0.msi
 # 下载其它安装包(解压安装)
-# https://cdn.mysql.com//archives/mysql-8.0/mysql-8.0.20-winx64.zip
-# 解压到  E:\Program Files\mysql-8.0.20-winx64\
-# 新增环境变量Path  E:\Program Files\mysql-8.0.20-winx64\bin
-# 编辑配置文件  E:\Program Files\mysql-8.0.20-winx64\my.ini
-basedir=E:\Program Files\mysql-8.0.20-winx64
-datadir=E:\Program Files\mysql-8.0.20-winx64\data
+# https://cdn.mysql.com/archives/mysql-8.0/mysql-8.0.20-winx64.zip
+# 解压到>  E:\Program Files\mysql-8.0.20
+# 新增环境变量PATH+=   E:\Program Files\mysql-8.0.20\bin
+# 新增配置文件> notepad E:\Program Files\mysql-8.0.20\my.ini
+[mysqld]
+# set basedir to your installation path
+basedir=E:/Program Files/mysql-8.0.20
+# set datadir to the location of your data directory
+datadir=E:/Program Files/mysql-8.0.20/data
 # 初始化 mysql
-cd E:\Program Files\mysql-8.0.20-winx64\bin
-mysqld --initialize --console  # 以管理员身份运行, 记录 temporary password
+cd E:\Program Files\mysql-8.0.20\bin  # 以管理员身份运行
+mysqld --initialize-insecure   # Initializing the Data Directory
+mysqld --console               # Starting the Server for the First Time
+mysqld --initialize --console  # 初始化数据目录并启动服务；记录 temporary password
 # 启动 mysql
-net start mysql
+mysqld --console               # 启动 start with --console display some useful information.
+mysqladmin -u root shutdown    # 停止 mysql process above, no windows service.
+mysqld --install MySQL         # 安装 Windows-Service (after shutdown) 默认服务名为 MySQL
+mysqld --install --local-service # 安装 Windows-Service name is MySQL. &有限系统权限的Windows帐户
+mysqld --remove                # 卸载 Windows-Service: NET STOP MySQL && SC DELETE MySQL
+net start MySQL                # 启动 Windows-Service
 # 输入"临时生成的root密码"
 # mysqladmin -u root -p password
 mysql -u root -p # Input temporary password
