@@ -65,7 +65,7 @@ mysql -u root -p mysql > [temporary-password] # 从初始化那里获取 tempora
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '密码' PASSWORD EXPIRE NEVER; # 更改加密方式为'永不过期'
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '密码'; # 更新密码+插件为mysql_native_password
 # 新建用户 `admin`@`%`
-mysql> CREATE USER `admin`@`%` IDENTIFIED WITH caching_sha2_password BY '密码' PASSWORD EXPIRE NEVER; # 密码+插件为caching_sha2_password
+mysql> CREATE USER `admin`@`%` IDENTIFIED WITH caching_sha2_password BY '密码' PASSWORD EXPIRE NEVER; # 插件为caching_sha2_password
 mysql> GRANT Alter, Alter Routine, Create, Create Routine, Create Temporary Tables, Create View, Delete, Drop, Event, Execute,
  File, Index, Insert, Lock Tables, Select, Show Databases, Show View, Trigger, Update ON *.* TO `admin`@`%`;
 mysql> FLUSH PRIVILEGES; # 刷新权限(生效)
