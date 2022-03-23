@@ -59,7 +59,8 @@ mysqld --install --local-service # 安装 Windows-Service name is MySQL. &有限
 mysqld --remove                # 卸载 Windows-Service: NET STOP MySQL && SC DELETE MySQL
 net start MySQL                # 启动 Windows-Service
 # 输入"临时生成的root密码"
-# mysqladmin -u root -p password  # 重置密码(使用客户端工具mysqladmin) for 'root'@'localhost'
+# mysqladmin -u root password 123456                     # 初始化密码123456
+# mysqladmin -u root -p 123456 password HGJ766GR767FKJU0 # 修改密码为'root'@'localhost'
 mysql -u root -p mysql > [temporary-password] # 从初始化那里获取 temporary password
 #mysql> ALTER USER root@localhost IDENTIFIED BY '密码'; # Update password only for mysql5.7
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '密码' PASSWORD EXPIRE NEVER; # 更改加密方式为'永不过期'
@@ -68,6 +69,8 @@ mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '�
 mysql> CREATE USER `admin`@`%` IDENTIFIED WITH caching_sha2_password BY '密码' PASSWORD EXPIRE NEVER; # 插件为caching_sha2_password
 mysql> GRANT Alter, Alter Routine, Create, Create Routine, Create Temporary Tables, Create View, Delete, Drop, Event, Execute,
  File, Index, Insert, Lock Tables, Select, Show Databases, Show View, Trigger, Update ON *.* TO `admin`@`%`;
+mysql> grant select,insert,update,delete,create,drop,index,alter on <db>.* to 'admin'@'%'; # 指定<db>授权
+mysql> GRANT ALL PRIVILEGES ON <db>.* TO 'admin'@'%';  # 授权用户对指定<db>的操作权限
 mysql> FLUSH PRIVILEGES; # 刷新权限(生效)
 # 登录 MySQL
 mysql -h localhost -P 3306 -u root -p mysql
@@ -81,6 +84,7 @@ mysql> FLUSH PRIVILEGES; # 刷新权限(生效)
 mysql> select Host,User,plugin from mysql.user;
 mysql> show variables like '%char%';
 mysql> set names utf8mb4; # set names utf8 # 设置编码utf8mb4才是真正的utf-8
+mysql> create database <db> default character set utf8mb4 collate utf8mb4_bin; # 创建数据库<db>字符集编码为utf8
 mysql> exit
 ~~~
 
