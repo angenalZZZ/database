@@ -36,17 +36,19 @@ mysql> select count(*) from mysql.time_zone;
 start https://dev.mysql.com/downloads/windows/installer/8.0.html
 start https://cdn.mysql.com/archives/mysql-installer/mysql-installer-community-8.0.20.0.msi
 # 下载其它安装包(解压安装) 如下步骤
-# https://cdn.mysql.com/archives/mysql-8.0/mysql-8.0.20-winx64.zip
+start https://cdn.mysql.com/archives/mysql-8.0/mysql-8.0.20-winx64.zip
 # 解压到>  E:\Program Files\mysql-8.0.20
 # 新增环境变量PATH+=   E:\Program Files\mysql-8.0.20\bin
+
 # 新增配置文件> notepad E:\Program Files\mysql-8.0.20\my.ini
 [mysqld]
 # set basedir to your installation path
-basedir=E:/Program Files/mysql-8.0.20
+basedir=D:/Program/mysql/8.0.20
 # set datadir to the location of your data directory
-datadir=E:/Program Files/mysql-8.0.20/data
+datadir=D:/Program/mysql/8.0.20/data
+
 # 初始化 mysql
-cd E:\Program Files\mysql-8.0.20\bin  # 以管理员身份运行
+cd D:/Program/mysql/8.0.20\bin  # 以管理员身份运行
 mysqld --initialize            # Initializing the Data Directory
 #mysqld --initialize-insecure
 mysqld --console               # Starting the Server for the First Time
