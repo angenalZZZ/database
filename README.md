@@ -216,6 +216,8 @@ $ sudo service mysql restart          # 重启 systemctl restart mysql
 $ mysql -P3306 -uroot -p < init.sql   # 以root身份登录并执行脚本> source init.sql
 # 创建数据库<db>字符集编码为utf8
 > create database <db> default character set utf8 collate utf8_bin;
+> ALTER TABLE `syncXXX` CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+> ALTER TABLE `syncXXX` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8_general_ci;
 # 创建用户并授权
 CREATE USER 'unknown'@'localhost' IDENTIFIED BY '******';     # 创建本地用户unknown密码******
 CREATE USER 'unknown'@'192.168.10.10' IDENTIFIED BY '******'; # 创建远程用户unknown密码******
