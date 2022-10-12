@@ -210,6 +210,7 @@ $ cat /etc/mysql/debian.cnf          # 查看系统密码
 $ mysql -u debian-sys-maint -p       # 准备修改密码
 > use mysql;
 > update mysql.user set authentication_string=password('root') where user='root'; # and Host ='localhost';
+# update user set authentication_string=SHA1("密码") where user="root"; # mysql80
 > update user set plugin="mysql_native_password";
 > flush privileges; quit;
 $ sudo service mysql restart          # 重启 systemctl restart mysql
