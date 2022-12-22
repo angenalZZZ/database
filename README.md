@@ -239,6 +239,35 @@ CREATE USER 'unknown'@'192.168.10.10' IDENTIFIED BY '******'; # 创建远程用�
 > mysqladmin -u root -p 123456 password HGJ766GR767FKJU0 # 修改密码
 > mysqladmin -u root shutdown                            # 关闭mysql
 
+
+# 使用group_concat函数，可以轻松的把分组后，name相同的数据拼接到一起，组成一个字符串，用逗号分隔。
+select name,group_concat(code) from `user` group by name;
+
+# name字段使用关键字模糊查询之后，再使用char_length函数获取name字段的字符长度，然后按长度升序。
+select * from brand where name like '%苏%' order by char_length(name) asc limit 5;
+
+# 按关键字从左到右进行排序，越靠左的越排在前面。
+select * from brand where name like '%苏%' order by locate('苏三',name) asc limit 5,5;
+
+# 去掉前后空格
+update brand set name=REPLACE(name,' ','') where name like ' %';
+update brand set name=REPLACE(name,' ','') where name like '% ';
+
+# 返回毫秒，可以使用now(3)
+select now(3) from brand limit 1;
+
+# 使用insert into ... ignore语法，避免重复插入数据。
+INSERT ignore INTO `brand`(`id`, `code`, `name`, `edit_date`) 
+VALUES (123, '108', '苏三', now(3));
+
+# 在一个事务中使用for update锁住一行记录，其他事务就不能在该事务提交之前，去更新那一行的数据。
+begin;
+select * from `user` where id=1 for update; // 锁住一行记录
+update `user` set score=score-1 where id=1; // 业务逻辑处理
+commit;
+
+
+
 # 存储过程 CALL sp_update(); 
 CREATE PROCEDURE sp_update()
 BEGIN
