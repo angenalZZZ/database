@@ -112,6 +112,7 @@
 	* 把IP地址存成 `unsigned int` 在where条件语句 `IP between ip1 and ip2` 
 	* 拆分大事务操作，设计时进行表分区、分表、分库等，从而提高系统并发能力
  * `SQL执行顺序`
+![img](https://github.com/angenalZZZ/database/blob/master/screenshots/644.jpg)
 ~~~sql
   (8) SELECT (9)DISTINCT (11)<Top Num> <available_columns_list> -- 减少数据除重、无效字段的数据查询
   (1) FROM [left_table]               -- 选取表，将多个表数据通过笛卡尔积变成一个虚表
