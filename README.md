@@ -1122,6 +1122,7 @@ angenals@163.com HGJ766GR	smtp.163.com 465 #? http://help.163.com/09/1224/17/5RA
 ~~~
 
 ### 远程.LOGIN.ACCOUNTS.
+	密码必须介于 15-20 个字符之间，并且必须包含大写和小写字母、数字以及以下符号中的一个或多个：@ # $ % ^ & * - _ ! = [ ] { } | :
 ~~~
 Administrator yzHGJ766GR767FKJU0
 centos yzHGJ766GR767FKJU0
