@@ -128,9 +128,9 @@
 #### 配置数据库SSL加密连接
 
 > [用于为 SQL Server 创建自签名证书的 PowerShell 脚本](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver15#powershell-script-to-create-self-signed-certificate-for-sql-server)<br>
-> A.服务器主机操作:[配置数据库引擎以加密连接](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver16)
+> A.服务器主机操作: [配置数据库引擎以加密连接](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver16)
 ~~~
-# 以管理员身份启动 PowerShell
+# 以管理员身份启动 PowerShell 用于为 SQL Server 创建自签名证书
 > SQL Server 2016 (13.x) 及更早版本使用 SHA1 算法
 New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
 -DnsName "[System.Net.Dns]::GetHostByName($env:computerName)",'localhost' `
@@ -155,7 +155,7 @@ New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUT
   2. 在"标志"选项卡的 "Force Encryption" 框中，选择"是"；在"证书"选项卡中，选择"上面生成的证书"；然后点击“确定”关闭该对话框。
   3. 点击第一项 "SQL Server 服务" 重启 SQL Server (MSSQLSERVER) 服务。
 ~~~
-> B.客户端主机操作:
+> B.客户端主机操作: [参考](https://www.cnblogs.com/gered/p/13595098.html)
 ~~~
 # 以管理员身份启动 PowerShell
 # 执行命令,准备"导入证书"
