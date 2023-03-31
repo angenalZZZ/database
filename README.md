@@ -2,7 +2,7 @@
     简而言之可视为电子化的文件柜——存储电子文件的处所，用户可以对文件中的数据进行新增、截取、更新、删除等操作。
     所谓“数据库”是以一定方式储存在一起、能予多个用户共享、具有尽可能小的冗余度、与应用程序彼此独立的数据集合。
 
- > [`✨Sql语句优化`](#sql语句优化)、[`✨Sql查询语句`](#sql查询语句)、[`✨数据库设计`](#数据库设计)(Mysql[`安装`](mysql.md)&[`规范`](mysql.md#mysql规范))、[`Sqlite`](sqlite.md)、[`数据库文档生成`](#数据库文档生成)
+ > [`✨Sql语句优化`](#sql语句优化)、[`✨Sql查询语句`](#sql查询语句)、[`✨配置数据库SSL加密连接`](#配置数据库SSL加密连接)、[`✨数据库设计`](#数据库设计)(Mysql[`安装`](mysql.md)&[`规范`](mysql.md#mysql规范))、[`Sqlite`](sqlite.md)、[`数据库文档生成`](#数据库文档生成)
 
 ## 数据库管理系统 [`Database's Tool`](https://github.com/angenalZZZ/doc-zip/blob/master/Database5Pro.7z "fishcodelib.com")、[`Navicat Premium`](https://www.jianshu.com/p/4113cd5ef139)
     Database Management System，简称`DBMS`，为管理数据库而设计的电脑软件系统，
@@ -124,55 +124,6 @@
   (7) HAVING <having_condition>  -- 可用聚合函数sum,avg,count...进行聚合筛选
   (10)ORDER BY <order_by_list>   -- 排序条件,减少用聚合函数
 ~~~
-
-#### 配置数据库SSL加密连接
-
-> [用于为 SQL Server 创建自签名证书的 PowerShell 脚本](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver15#powershell-script-to-create-self-signed-certificate-for-sql-server)<br>
-> A.服务器主机操作: [配置数据库引擎以加密连接](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver16)
-~~~
-# 以管理员身份启动 PowerShell 用于为 SQL Server 创建自签名证书
-> SQL Server 2016 (13.x) 及更早版本使用 SHA1 算法
-New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
--DnsName "[System.Net.Dns]::GetHostByName($env:computerName)",'localhost' `
--KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA1" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
--NotAfter (Get-Date).AddMonths(36) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
--CertStoreLocation "cert:\LocalMachine\My"
-> SQL Server 2017 (14.x) 或更高版本使用 SHA256 算法
-New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
--DnsName "[System.Net.Dns]::GetHostByName($env:computerName)",'localhost' `
--KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA256" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
--NotAfter (Get-Date).AddMonths(36) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
--CertStoreLocation "cert:\LocalMachine\My"
-
-# 执行命令,准备"导出证书"
-> mmc  # 文件>添加管理单元>选择"证书"并添加: 如果没有 "控制台根节点" / "证书(本地计算机)"
-       # 个人>证书>选择上面生成的"证书">准备导出...
-       # 右键 "所有任务:管理私钥" 添加: 输入 NT Service\MSSQLSERVER 检查名称 即"MSSQLSERVER"账户, 然后点击确定。
-       # 右键 "所有任务:导出" > 选择"不,不要导出私钥"下一步 > 选择"加密消息语法标准-PKCS#7(.P7B)(C)"下一步 > 指定要导出的文件名。
-# 据库引擎以加密连接:
-  工具 "SQL Server 2016 配置管理器"
-  1. 在 SQL Server 配置管理器中，展开"SQL Server 网络配置" 右键单击<服务器实例MSSQLSERVER>的协议，然后单击属性。
-  2. 在"标志"选项卡的 "Force Encryption" 框中，选择"是"；在"证书"选项卡中，选择"上面生成的证书"；然后点击“确定”关闭该对话框。
-  3. 点击第一项 "SQL Server 服务" 重启 SQL Server (MSSQLSERVER) 服务。
-~~~
-> B.客户端主机操作: [参考](https://www.cnblogs.com/gered/p/13595098.html)
-~~~
-# 以管理员身份启动 PowerShell
-# 执行命令,准备"导入证书"
-> mmc  # 文件>添加管理单元>选择"证书"并添加: 如果没有 "控制台根节点" / "证书(本地计算机)"
-       # 个人>受信任的根证书颁发机构>证书>准备导入...
-       # 右键 "所有任务:导入" > 选择"要导入的文件" > 然后可以删除文件*.p7b
-
-# 配置应用程序的"数据库连接"
-"Data Source=172.*.*.*;Initial Catalog=dbname;User ID=username;Password=******;Pooling=True;Max Pool Size=200;Connect Timeout=15"
-添加"Encrypt=True;TrustServerCertificate=True;"
-或者"Encrypt=True;TrustServerCertificate=True;Integrated Security=True;Persist Security Info=True;"
-
-# 验证网络加密(验证是否已成功配置和启用网络加密)
-SELECT DISTINCT (encrypt_option) FROM sys.dm_exec_connections
-~~~
-
-#### SQL语句查询
 
 ~~~sql
 /* 过滤数据 Filtering Data */
@@ -938,6 +889,54 @@ END
 PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 ~~~
 
+
+
+#### 配置数据库SSL加密连接
+
+> [用于为 SQL Server 创建自签名证书的 PowerShell 脚本](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver15#powershell-script-to-create-self-signed-certificate-for-sql-server)<br>
+> A.服务器主机操作: [配置数据库引擎以加密连接](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver16)
+~~~
+# 以管理员身份启动 PowerShell 用于为 SQL Server 创建自签名证书
+> SQL Server 2016 (13.x) 及更早版本使用 SHA1 算法
+New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
+-DnsName "[System.Net.Dns]::GetHostByName($env:computerName)",'localhost' `
+-KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA1" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
+-NotAfter (Get-Date).AddMonths(36) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
+-CertStoreLocation "cert:\LocalMachine\My"
+> SQL Server 2017 (14.x) 或更高版本使用 SHA256 算法
+New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
+-DnsName "[System.Net.Dns]::GetHostByName($env:computerName)",'localhost' `
+-KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA256" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
+-NotAfter (Get-Date).AddMonths(36) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
+-CertStoreLocation "cert:\LocalMachine\My"
+
+# 执行命令,准备"导出证书"
+> mmc  # 文件>添加管理单元>选择"证书"并添加: 如果没有 "控制台根节点" / "证书(本地计算机)"
+       # 个人>证书>选择上面生成的"证书">准备导出...
+       # 右键 "所有任务:管理私钥" 添加: 输入 NT Service\MSSQLSERVER 检查名称 即"MSSQLSERVER"账户, 然后点击确定。
+       # 右键 "所有任务:导出" > 选择"不,不要导出私钥"下一步 > 选择"加密消息语法标准-PKCS#7(.P7B)(C)"下一步 > 指定要导出的文件名。
+# 据库引擎以加密连接:
+  工具 "SQL Server 2016 配置管理器"
+  1. 在 SQL Server 配置管理器中，展开"SQL Server 网络配置" 右键单击<服务器实例MSSQLSERVER>的协议，然后单击属性。
+  2. 在"标志"选项卡的 "Force Encryption" 框中，选择"是"；在"证书"选项卡中，选择"上面生成的证书"；然后点击“确定”关闭该对话框。
+  3. 点击第一项 "SQL Server 服务" 重启 SQL Server (MSSQLSERVER) 服务。
+~~~
+> B.客户端主机操作: [参考](https://www.cnblogs.com/gered/p/13595098.html)
+~~~
+# 以管理员身份启动 PowerShell
+# 执行命令,准备"导入证书"
+> mmc  # 文件>添加管理单元>选择"证书"并添加: 如果没有 "控制台根节点" / "证书(本地计算机)"
+       # 个人>受信任的根证书颁发机构>证书>准备导入...
+       # 右键 "所有任务:导入" > 选择"要导入的文件" > 然后可以删除文件*.p7b
+
+# 配置应用程序的"数据库连接"
+"Data Source=172.*.*.*;Initial Catalog=dbname;User ID=username;Password=******;Pooling=True;Max Pool Size=200;Connect Timeout=15"
+添加"Encrypt=True;TrustServerCertificate=True;"
+或者"Encrypt=True;TrustServerCertificate=True;Integrated Security=True;Persist Security Info=True;"
+
+# 验证网络加密(验证是否已成功配置和启用网络加密)
+SELECT DISTINCT (encrypt_option) FROM sys.dm_exec_connections
+~~~
 
 ----
 
