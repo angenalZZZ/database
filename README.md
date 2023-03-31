@@ -127,7 +127,7 @@
 
 #### 配置数据库SSL加密连接
 
-> [用于为 SQL Server 创建自签名证书的 PowerShell 脚本](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver15#powershell-script-to-create-self-signed-certificate-for-sql-server)
+> [用于为 SQL Server 创建自签名证书的 PowerShell 脚本](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver15#powershell-script-to-create-self-signed-certificate-for-sql-server)<br>
 > A.服务器主机操作:[配置数据库引擎以加密连接](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver16)
 ~~~
 # 以管理员身份启动 PowerShell
@@ -167,7 +167,12 @@ New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUT
 "Data Source=172.*.*.*;Initial Catalog=dbname;User ID=username;Password=******;Pooling=True;Max Pool Size=200;Connect Timeout=15"
 添加"Encrypt=True;TrustServerCertificate=True;"
 或者"Encrypt=True;TrustServerCertificate=True;Integrated Security=True;Persist Security Info=True;"
+
+# 验证网络加密(验证是否已成功配置和启用网络加密)
+SELECT DISTINCT (encrypt_option) FROM sys.dm_exec_connections
 ~~~
+
+#### SQL语句查询
 
 ~~~sql
 /* 过滤数据 Filtering Data */
