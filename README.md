@@ -898,20 +898,21 @@ PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 # 以管理员身份启动 PowerShell 用于为 SQL Server 创建自签名证书(服务器SSL验证证书要求：CN=主机名)
 # SQL Server 2016 (13.x) 及更早版本使用 SHA1 算法
 New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
--DnsName "[System.Net.Dns]::GetHostByName($env:computerName)",'localhost' `
+-DnsName "[System.Net.Dns]::GetHostByName($env:COMPUTERNAME)",'localhost' `
 -KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA1" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
 -NotAfter (Get-Date).AddMonths(180) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
 -CertStoreLocation "cert:\LocalMachine\My"
-# 可以为其它计算机(如远程服务器)创建自签名证书;
-# 然后导出私钥,复制到远程服务器并导入; 接下来...S1步骤...S2步骤...
-New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=web-0002" `
--DnsName "[System.Net.Dns]::GetHostByName(web-0002)",'172.18.231.138','localhost' `
+
+# 可以为其它计算机(如远程服务器)创建自签名证书; 然后导出私钥,复制到远程服务器并导入; 接下来...S1步骤...S2步骤...
+New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=db-0001" `
+-DnsName "[System.Net.Dns]::GetHostByName(db-0001)",'172.18.231.12','localhost' `
 -KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA1" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
 -NotAfter (Get-Date).AddMonths(180) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
 -CertStoreLocation "cert:\LocalMachine\My"
+
 # SQL Server 2017 (14.x) 或更高版本使用 SHA256 算法
 New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
--DnsName "[System.Net.Dns]::GetHostByName($env:computerName)",'localhost' `
+-DnsName "[System.Net.Dns]::GetHostByName($env:COMPUTERNAME)",'localhost' `
 -KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA256" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
 -NotAfter (Get-Date).AddMonths(180) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
 -CertStoreLocation "cert:\LocalMachine\My"
