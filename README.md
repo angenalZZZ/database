@@ -890,32 +890,38 @@ PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 ~~~
 
 
-
 #### 配置数据库SSL加密连接
 
 > [用于为 SQL Server 创建自签名证书的 PowerShell 脚本](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver15#powershell-script-to-create-self-signed-certificate-for-sql-server)<br>
 > A.服务器主机操作: [配置数据库引擎以加密连接](https://learn.microsoft.com/zh-cn/sql/database-engine/configure-windows/configure-sql-server-encryption?view=sql-server-ver16)
 ~~~
-# 以管理员身份启动 PowerShell 用于为 SQL Server 创建自签名证书
-> SQL Server 2016 (13.x) 及更早版本使用 SHA1 算法
+# 以管理员身份启动 PowerShell 用于为 SQL Server 创建自签名证书(服务器SSL验证证书要求：CN=主机名)
+# SQL Server 2016 (13.x) 及更早版本使用 SHA1 算法
 New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
 -DnsName "[System.Net.Dns]::GetHostByName($env:computerName)",'localhost' `
 -KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA1" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
--NotAfter (Get-Date).AddMonths(36) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
+-NotAfter (Get-Date).AddMonths(180) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
 -CertStoreLocation "cert:\LocalMachine\My"
-> SQL Server 2017 (14.x) 或更高版本使用 SHA256 算法
+# 可以为其它计算机(如远程服务器)创建自签名证书;
+# 然后导出私钥,复制到远程服务器并导入; 接下来...S1步骤...S2步骤...
+New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=web-0002" `
+-DnsName "[System.Net.Dns]::GetHostByName(web-0002)",'172.18.231.138','localhost' `
+-KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA1" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
+-NotAfter (Get-Date).AddMonths(180) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
+-CertStoreLocation "cert:\LocalMachine\My"
+# SQL Server 2017 (14.x) 或更高版本使用 SHA256 算法
 New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
 -DnsName "[System.Net.Dns]::GetHostByName($env:computerName)",'localhost' `
 -KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA256" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
--NotAfter (Get-Date).AddMonths(36) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
+-NotAfter (Get-Date).AddMonths(180) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
 -CertStoreLocation "cert:\LocalMachine\My"
 
 # 执行命令,准备"导出证书"
 > mmc  # 文件>添加管理单元>选择"证书"并添加: 如果没有 "控制台根节点" / "证书(本地计算机)"
-       # 个人>证书>选择上面生成的"证书">准备导出...
+       # 个人>证书>选择上面生成的"证书">准备导出...S1步骤...
        # 右键 "所有任务:管理私钥" 添加: 输入 NT Service\MSSQLSERVER 检查名称 即"MSSQLSERVER"账户, 然后点击确定。
        # 右键 "所有任务:导出" > 选择"不,不要导出私钥"下一步 > 选择"加密消息语法标准-PKCS#7(.P7B)(C)"下一步 > 指定要导出的文件名。
-# 据库引擎以加密连接:
+# 数据库引擎以加密连接:
   工具 "SQL Server 2016 配置管理器"
   1. 在 SQL Server 配置管理器中，展开"SQL Server 网络配置" 右键单击<服务器实例MSSQLSERVER>的协议，然后单击属性。
   2. 在"标志"选项卡的 "Force Encryption" 框中，选择"是"；在"证书"选项卡中，选择"上面生成的证书"；然后点击“确定”关闭该对话框。
@@ -926,17 +932,18 @@ New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUT
 # 以管理员身份启动 PowerShell
 # 执行命令,准备"导入证书"
 > mmc  # 文件>添加管理单元>选择"证书"并添加: 如果没有 "控制台根节点" / "证书(本地计算机)"
-       # 个人>受信任的根证书颁发机构>证书>准备导入...
-       # 右键 "所有任务:导入" > 选择"要导入的文件" > 然后可以删除文件*.p7b
+       # 个人>受信任的根证书颁发机构>证书>准备导入...S2步骤...
+       # 右键 "所有任务:导入" > 选择"要导入的文件*.p7b" > 然后可以删除文件*.p7b
 
 # 配置应用程序的"数据库连接"
-"Data Source=172.*.*.*;Initial Catalog=dbname;User ID=username;Password=******;Pooling=True;Max Pool Size=200;Connect Timeout=15"
+"Data Source=192.*.*.*;Initial Catalog=dbname;User ID=username;Password=******;Pooling=True;Max Pool Size=200;Connect Timeout=15"
 添加"Encrypt=True;TrustServerCertificate=True;"
 或者"Encrypt=True;TrustServerCertificate=True;Integrated Security=True;Persist Security Info=True;"
 
 # 验证网络加密(验证是否已成功配置和启用网络加密)
 SELECT DISTINCT (encrypt_option) FROM sys.dm_exec_connections
 ~~~
+
 
 ----
 
