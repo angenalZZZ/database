@@ -913,7 +913,7 @@ New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=db-0001" `
 
 # SQL Server 2017 (14.x) 或更高版本使用 SHA256 算法
 New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
--DnsName "[System.Net.Dns]::GetHostByName($env:COMPUTERNAME)",'localhost' `
+-DnsName "[System.Net.Dns]::GetHostByName($env:COMPUTERNAME)",$ipv4,'localhost' `
 -KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA256" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
 -NotAfter (Get-Date).AddMonths(360) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
 -CertStoreLocation "cert:\LocalMachine\My"
