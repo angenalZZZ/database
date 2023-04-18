@@ -897,8 +897,9 @@ PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 ~~~
 # 以管理员身份启动 PowerShell 用于为 SQL Server 创建自签名证书(服务器SSL验证证书要求：CN=主机名)
 # SQL Server 2016 (13.x) 及更早版本使用 SHA1 算法
+$ipv4 = (Get-NetIPAddress | Where-Object {$_.AddressState -eq "Preferred" -and $_.ValidLifetime -lt "24:00:00"}).IPAddress
 New-SelfSignedCertificate -Type SSLServerAuthentication -Subject "CN=$env:COMPUTERNAME" `
--DnsName "[System.Net.Dns]::GetHostByName($env:COMPUTERNAME)",'localhost' `
+-DnsName "[System.Net.Dns]::GetHostByName($env:COMPUTERNAME)",$ipv4,'localhost' `
 -KeyAlgorithm "RSA" -KeyLength 2048 -HashAlgorithm "SHA1" -TextExtension "2.5.29.37={text}1.3.6.1.5.5.7.3.1" `
 -NotAfter (Get-Date).AddMonths(360) -KeySpec KeyExchange -Provider "Microsoft RSA SChannel Cryptographic Provider" `
 -CertStoreLocation "cert:\LocalMachine\My"
