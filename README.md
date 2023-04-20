@@ -883,9 +883,11 @@ END
 ~~~
 
 
-> [`Oracle`](https://www.oracle.com) ~ `sql语句`
-
+> [`Oracle`](https://github.com/oracle/dotnet-db-samples/) ~ `sql语句`
 ~~~sql
+# 数据库配置中文字符集，设置为 US7ASCII 将无法处理中文16位GBK数据，可使用支持OraOLEDB原生驱动的FreeSql解决。
+# 需要支持中文时，推荐 AL32UTF8 (优先) or ZHS16GBK 参考：https://github.com/oracle/dotnet-db-samples/issues/185
+
 PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 ~~~
 
