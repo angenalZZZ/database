@@ -965,12 +965,23 @@ export PATH=$ORACLE_HOME/bin:$PATH
 > alter user crm account unlock;                   # 解锁crm用户登录
 > alter system set processes=2000 scope=spfile;    # 修改数据库最大连接数
 > alter system set SHARED_POOL_SIZE='128M' SCOPE=spfile; # 扩大共享内存
-> shutdown immediate; startup mount;               # 修改字符集
+> shutdown immediate; startup mount;               # 修改字符集(准备前动作:关闭访问)
 > ALTER SYSTEM ENABLE RESTRICTED SESSION;
 > ALTER SYSTEM SET AQ_TM_PROCESSES=0;
 > ALTER DATABASE OPEN;
 # 数据库配置中文字符集，设置为 US7ASCII 客户端将无法处理中文16位GBK数据，需要使用支持OraOLEDB原生驱动的FreeSql解决乱码
 # 支持中文时，推荐 AL32UTF8 (优先) 或者 ZHS16GBK 参考：https://github.com/oracle/dotnet-db-samples/issues/185
+# 客户端访问时，设置 NLS_LANG 参数：https://www.jianshu.com/p/864ca30a716f
+# 1.常用中文字符集 set NLS_LANG=SIMPLIFIED CHINESE_CHINA.ZHS16GBK
+# 2.Unicode字符集 set NLS_LANG=AMERICAN_AMERICA.AL32UTF8   --包含了中文字符
+# 3.早期英文字符集 set NLS_LANG=AMERICAN_AMERICA.US7ASCII   --不支持中文字符
+# 4.客户端访问时，排查中文乱码：
+> SELECT * FROM NLS_DATABASE_PARAMETERS;
+# 服务器:NLS_CHARACTERSET=US7ASCII
+# 客户端:NLS_CHARACTERSET=AL32UTF8
+# 先将服务器字符串编码从'US7ASCII'转换成'ZHS16GBK';然后客户端将'ZHS16GBK'字符串编码再转换成'UTF8'
+# 服务器sql: convert(utl_raw.cast_to_raw(CHAR_ColumnName),'ZHS16GBK','US7ASCII')
+# 客户端sql: convert(utl_raw.cast_to_VARCHAR2(CHAR_ColumnName),'UTF8','ZHS16GBK')
 #> ALTER DATABASE CHARACTER SET ZHS16GBK;          # 更改默认字符集，已有数据可能会乱码
 > ALTER DATABASE CHARACTER SET INTERNAL_USE ZHS16GBK; # 跳过数据检查，更改默认字符集 AL32UTF8 为 ZHS16GBK
 > shutdown immediate; startup;                     # 重启数据库
