@@ -885,8 +885,119 @@ END
 
 > [`Oracle`](https://github.com/oracle/dotnet-db-samples/) ~ `sql语句`
 ~~~sql
-# 数据库配置中文字符集，设置为 US7ASCII 将无法处理中文16位GBK数据，可使用支持OraOLEDB原生驱动的FreeSql解决。
-# 需要支持中文时，推荐 AL32UTF8 (优先) or ZHS16GBK 参考：https://github.com/oracle/dotnet-db-samples/issues/185
+# 安装数据库 Oracle 11g
+  docker pull registry.cn-hangzhou.aliyuncs.com/helowin/oracle_11g
+  groupadd -g 500 oinstall && groupadd -g 501 dba && groupadd -g 502 oper
+  useradd -u 500 -g oinstall -G dba,oper oracle
+  mkdir -p /media/docker/oracle
+  docker run --name oracletmp --privileged=true -d -p 1521:1521 registry.cn-hangzhou.aliyuncs.com/helowin/oracle_11g
+  docker cp oracletmp:/home/oracle/app/oracle/oradata/ /media/docker/oracle/
+  chown -R 500:500 /media/docker/oracle
+  docker rm -f oracletmp
+# docker run --name oracle --privileged=true -d -m 1024m -p 1521:1521 
+#   -v /media/docker/oracle/oradata:/home/oracle/app/oracle/oradata 
+#   registry.cn-hangzhou.aliyuncs.com/helowin/oracle_11g
+  cd /media/docker/oracle
+  cat > docker-compose.yml <<EOF
+version: '3.1'
+services:
+  master:
+    image: registry.cn-hangzhou.aliyuncs.com/helowin/oracle_11g
+    container_name: oracle
+    privileged: true
+    restart: always
+    ports:
+      - 1521:1521
+    volumes:
+      - "/media/docker/oracle/oradata:/home/oracle/app/oracle/oradata"
+    environment:
+      - ENV=development
+    deploy:
+      resources:
+        limits:
+          cpus: '0.60'
+          memory: 1024m
+    logging:
+      options:
+        max-size: 10m
+        max-file: 10
+    healthcheck:
+      disable: true
+EOF
+  # 启动 Oracle
+  docker-compose up -d
+  # 配置 Oracle
+  docker exec -it oracle bash
+  rm -rf /home/oracle/app/oracle/flash_recovery_area/helowin/control02.ctl
+  cp /home/oracle/app/oracle/oradata/helowin/control01.ctl /home/oracle/app/oracle/flash_recovery_area/helowin/control02.ctl
+  exit ; docker restart oracle ; docker exec -it oracle bash # 退出后重启
+  su - root # 密码为 helowin
+  vi ~/.bashrc ; source ~/.bashrc 
+export ORACLE_HOME=/home/oracle/app/oracle/product/11.2.0/dbhome_2
+export ORACLE_SID=helowin
+export PATH=$ORACLE_HOME/bin:$PATH
+  ln -s $ORACLE_HOME/bin/sqlplus /usr/bin # 创建sqlplus软连接-快捷方式
+  exit # 返回用户 oracle
+  vi ~/.bashrc ; source ~/.bashrc # 同上
+  #su - oracle # 密码为 oracle
+  #sqlplus 账户/密码 as 角色名; # 登录数据
+  sqlplus /nolog  # 登录数据库;或用其它客户端,如Navicat需安装Client: instantclient-basic-windows.x64-11.2.0.4.0.zip
+  #sqlplus sys/oracle as sysdba                    # 管理员登录
+  #sqlplus scott/oracle                            # 普通用户登录
+> show user                                        # 显示当前登录用户
+> conn /as sysdba                                  # 切换为管理用户
+> select instance from v$thread;                   # 当前实例
+> ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED; # 修改密码规则策略为密码永不过期
+> alter user system identified by oracle;          # 修改system账号密码为 oracle
+> alter user sys identified by oracle;             # 修改sys账号密码为 oracle
+> alter user scott identified by oracle;           # 修改scott普通账号密码为 oracle
+> alter user scott account unlock;                 # 解锁scott用户登录
+> create user test identified by oracle;           # 创建账号 test 密码 oracle
+> grant connect,dba,resource to test;              # 将dba管理权限授权给账号test
+> alter user test account unlock;                  # 解锁test用户登录
+#> select username from dba_users where ROWNUM<10; # 查看所有用户
+> drop user test cascade;                          # 删除用户账号;
+# 下面开始:创建数据库表空间crm;创建用户crm及默认表空间;
+> create tablespace crm DATAFILE '/home/oracle/app/oracle/oradata/helowin/crm.dbf' SIZE 100M AUTOEXTEND ON;
+> create user crm identified by oracle default tablespace crm temporary tablespace temp;
+> grant connect,dba,resource to crm;               # 将dba管理权限授权给账号crm
+> GRANT CREATE SESSION,CREATE TABLE,CREATE VIEW,CREATE SEQUENCE,UNLIMITED TABLESPACE TO crm;
+> alter user crm account unlock;                   # 解锁crm用户登录
+> alter system set processes=2000 scope=spfile;    # 修改数据库最大连接数
+> alter system set SHARED_POOL_SIZE='128M' SCOPE=spfile; # 扩大共享内存
+> shutdown immediate; startup mount;               # 修改字符集
+> ALTER SYSTEM ENABLE RESTRICTED SESSION;
+> ALTER SYSTEM SET AQ_TM_PROCESSES=0;
+> ALTER DATABASE OPEN;
+# 数据库配置中文字符集，设置为 US7ASCII 客户端将无法处理中文16位GBK数据，需要使用支持OraOLEDB原生驱动的FreeSql解决乱码
+# 支持中文时，推荐 AL32UTF8 (优先) 或者 ZHS16GBK 参考：https://github.com/oracle/dotnet-db-samples/issues/185
+#> ALTER DATABASE CHARACTER SET ZHS16GBK;          # 更改默认字符集，已有数据可能会乱码
+> ALTER DATABASE CHARACTER SET INTERNAL_USE ZHS16GBK; # 跳过数据检查，更改默认字符集 AL32UTF8 为 ZHS16GBK
+> shutdown immediate; startup;                     # 重启数据库
+> select userenv('language') from dual;            # 验证默认字符集 ZHS16GBK
+# shutdown immediate; exit;                        # 关闭数据库再退出
+> exit;                                            # 直接退出
+  sqlplus crm/oracle                               # 普通用户登录
+> select name from v$database;                     # 查询用户数据库名; 表名;
+> select table_name from all_tables; # where table_name like '%PER'; where ROWNUM<10;
+# vi /home/oracle/.bash_profile                    # 修改SID为ORCL ; 默认: helowin
+#export ORACLE_SID=ORCL                            # 还包括: vi ~/.bashrc ; source ~/.bashrc 
+# source /home/oracle/.bash_profile
+# vi /etc/oratab                                   # 修改SID根目录
+# helowin:/home/oracle/.. 改为 ORCL:/home/oracle/..
+# cd $ORACLE_HOME/dbs # 修改dbs文件
+# mv hc_helowin.dat hc_ORCL.dat
+# mv lkHELOWIN lkORCL
+# mv orapwhelowin orapwORCL
+# mv spfilehelowin.ora spfileORCL.ora
+# mv inithelowin.ora initORCL.ora
+# orapwd file=$ORACLE_HOME/dbs/orapwORCL password=system entries=5 force=y # 重建口令文件(orapwORCL文件)
+# exit ; docker restart oracle ; docker exec -it oracle bash # 必须重启docker
+# sqlplus / as sysdba
+# startup                                          # 启动数据库
+# > select instance from v$thread;                 # 检查SID名称
+# > select username from dba_users;                # 查看用户信息
+
 
 PURGE recyclebin;  # oracle10g回收站Recycle清除Purge
 ~~~
