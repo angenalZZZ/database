@@ -972,7 +972,10 @@ export PATH=$ORACLE_HOME/bin:$PATH
 # 1.常用中文字符集 set NLS_LANG=SIMPLIFIED CHINESE_CHINA.ZHS16GBK
 # 2.Unicode字符集 set NLS_LANG=AMERICAN_AMERICA.AL32UTF8   --包含了中文字符
 # 3.早期英文字符集 set NLS_LANG=AMERICAN_AMERICA.US7ASCII   --不支持中文字符
-# 4.客户端访问时，排查中文乱码：
+# 4.Navicat连接Oacle中文显示乱码：
+#> 编辑连接>高级>客户端字符集: 与服务器端字符集一致sql查询> select userenv('language') from dual;
+#> 编辑连接>高级>编码: 20936 (Simplified Chinese GB2312) #设置为中文编码GB2312(macOS=10008;windows=20936)
+# 5.客户端程序访问时，排查中文乱码：
 #> SELECT * FROM NLS_DATABASE_PARAMETERS;
 # 服务器:NLS_CHARACTERSET=US7ASCII
 # 客户端:NLS_CHARACTERSET=AL32UTF8
