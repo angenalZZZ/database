@@ -350,6 +350,13 @@ WHERE xp.name in (N'MS_Description')
 -- --日期时间-- https://www.aliyun.com/jiaocheng/1399735.html
 -- https://docs.microsoft.com/en-us/sql/t-sql/functions/current-timestamp-transact-sql?view=sql-server-2017#examples
 SET DATEFIRST 1; SELECT @@DATEFIRST [星期一为每周第一天];
+-- --获取周天数;
+DECLARE @date_given datetime = '2019-06-02';
+SELECT DATEPART(WEEKDAY,@date_given) [Week],
+ DATEPART(week, getdate()) [Week Of Year],
+ (DATEPART(week, @date_given) - DATEPART(week, DATEADD(day, 1, EOMONTH(@date_given, -1)))) + 1 [Week Of Month],
+ DATEADD(day, 1, EOMONTH(@date_given, -1)) [Month Start], EOMONTH(@date_given, 0) [Month End];
+-- --获取时区, 时间戳, UTC时间戳
 SELECT SYSDATETIME(), SYSDATETIMEOFFSET()  -- 时区offset +08:00
 SELECT SYSUTCDATETIME(), CURRENT_TIMESTAMP -- UTC时间, 时间戳timestamp等价于getdate()
 SELECT GETDATE(), GETUTCDATE()             -- 当前本地时间getdate(), UTC时间戳
