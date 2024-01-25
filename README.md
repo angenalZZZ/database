@@ -336,11 +336,19 @@ FROM sys.dm_exec_query_stats qs CROSS APPLY sys.dm_exec_query_plan(qs.plan_handl
 ORDER BY [last_execution_time] DESC
 
 
+-- --创建外键
+ALTER TABLE NewsService WITH CHECK ADD CONSTRAINT FK_NewsService_CreateBy FOREIGN KEY(CreateBy) REFERENCES AspNetUsers (Id)
+ALTER TABLE NewsService CHECK CONSTRAINT FK_NewsService_CreateBy
+-- --创建索引
+CREATE NONCLUSTERED INDEX IDX_AspNetUsers_WorkUnit ON AspNetUsers (WorkUnit)
+  WITH (PAD_INDEX=OFF,STATISTICS_NORECOMPUTE=OFF,IGNORE_DUP_KEY=OFF,ALLOW_ROW_LOCKS=ON,ALLOW_PAGE_LOCKS=ON) ON PRIMARY
+
 -- --查看数据库表结构
 SELECT tbl.name AS [TABLE_NAME], SCHEMA_NAME(tbl.schema_id) AS [TABLE_SCHEMA], 
  CAST(case when tbl.is_ms_shipped=1 then 1 when(select major_id from sys.extended_properties where major_id=tbl.object_id 
   and minor_id=0 and class=1 and name=N'microsoft_database_tools_support') is not null then 1 else 0 end AS bit) AS [IsSystemObject] 
 FROM sys.tables AS tbl ORDER BY tbl.name;
+
 -- --查看存储过程结构
 SELECT cast(xp.[value] as nvarchar(4000)) 
 FROM ::fn_listextendedproperty(NULL,N'Schema',N'dbo',N'Procedure',N'proc_import_to_efi_mall_fei_billapply',NULL,NULL) xp 
